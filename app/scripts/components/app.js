@@ -1,9 +1,10 @@
 import React from 'react'
-// import nav from './nav'
+import Nav from './nav'
 class App extends React.Component {
   render () {
     return (
       <React.Fragment>
+        <Nav />
         <main>
           {this.props.children || null}
         </main>
