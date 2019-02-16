@@ -7,13 +7,15 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 import store from './store'
 import App from './components/app'
 import Home from './components/home'
+import Reports from './components/reports'
 
 const Root = () => (
   <Provider store={store}>
     <HashRouter>
       <App>
         <Switch>
-          <Route path='/' component={Home} />
+          <Route exact path='/reports' component={Reports} />
+          <Route exact path='/' component={Home} />
         </Switch>
       </App>
     </HashRouter>
