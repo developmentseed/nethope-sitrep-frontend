@@ -3,8 +3,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { getReports } from '../actions'
 
-import Report from './report'
-import AsyncStatus from './async-status'
+import Report from '../components/report'
+import AsyncStatus from '../components/async-status'
 
 class Reports extends React.Component {
   componentDidMount () {

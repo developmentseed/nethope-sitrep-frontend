@@ -5,9 +5,10 @@ import { Provider } from 'react-redux'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import store from './store'
+
 import App from './components/app'
-import Home from './components/home'
-import Reports from './components/reports'
+import Home from './pages/home'
+import Reports from './pages/reports'
 
 const Root = () => (
   <Provider store={store}>
