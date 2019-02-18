@@ -6,9 +6,9 @@ const initialState = {
   error: null
 }
 
-const asyncTypes = ['GET_REPORTS']
-const SUCCESS = asyncTypes.map(s => s += '_SUCCESS')
-const FAIL = asyncTypes.map(s => s += '_FAIL')
+const asyncTypes = [types.GET_REPORTS]
+const SUCCESS = asyncTypes.map(s => s + '_SUCCESS')
+const FAIL = asyncTypes.map(s => s + '_FAIL')
 
 export default function reducer (state = initialState, action) {
   if (asyncTypes.indexOf(action.type) >= 0) {

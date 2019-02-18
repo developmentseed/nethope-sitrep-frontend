@@ -11,8 +11,8 @@ if (environment !== 'production') {
   middlewares.push(logger)
 }
 
-const composeEnhancers = environment !== 'production' ?
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : compose
+const composeEnhancers = environment !== 'production'
+  ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : compose
 
 const initialState = {}
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middlewares)))

@@ -2,7 +2,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { getReports } from '../actions'
-import types from '../actions/types'
+
+import Report from './report'
+import AsyncStatus from './async-status'
 
 class Reports extends React.Component {
   componentDidMount () {
@@ -10,16 +12,22 @@ class Reports extends React.Component {
   }
 
   render () {
+    const { reports } = this.props
     return (
       <div className='reports'>
-        <p>Reports!</p>
+        <AsyncStatus />
+        {reports.map(report => <Report key={report.id} report={report} />)}
       </div>
     )
   }
 }
 
+const mapStateToProps = (state) => ({
+  reports: state.reports
+})
+
 const mapDispatch = {
   getReports
 }
 
-export default connect(null, mapDispatch)(Reports)
+export default connect(mapStateToProps, mapDispatch)(Reports)
