@@ -9,6 +9,7 @@ import store from './store'
 import App from './components/app'
 import Home from './pages/home'
 import Reports from './pages/reports'
+import ReportDetail from './pages/report-detail'
 
 const Root = () => (
   <Provider store={store}>
@@ -16,6 +17,7 @@ const Root = () => (
       <App>
         <Switch>
           <Route exact path='/reports' component={Reports} />
+          <Route exact path='/reports/:reportId' component={ReportDetail} />
           <Route exact path='/' component={Home} />
         </Switch>
       </App>
