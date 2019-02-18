@@ -3,9 +3,8 @@
 import { createTypes, async } from 'redux-action-creator'
 
 const types = createTypes([
-  ...async('GET_REPORTS'),
-  'POLL',
-  'POLLSTOP'
+  ...async('GET_REPORTS')
 ])
+console.log(types)
 
 export default types
