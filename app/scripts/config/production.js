@@ -1,5 +1,6 @@
 'use strict';
 
 export default {
-  environment: 'production'
+  environment: 'production',
+  api: 'https://nethope-sitrep-api.herokuapp.com'
 };
