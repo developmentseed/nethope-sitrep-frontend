@@ -1,9 +1,15 @@
 'use strict'
 import url from 'url'
-import { asyncActionCreator } from 'redux-action-creator'
+import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
-import { api } from '../config'
+import { api, authToken } from '../config'
+
+if (!authToken) {
+  console.warn('No auth token found in local config. API requests will fail.') // eslint-disable-line no-console
+} else {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`
+}
 
 // Note, For "detail" queries, ie a single report, we include
 // a special header so the API returns the data as an object,
@@ -22,3 +28,19 @@ export const getReport = asyncActionCreator(
     headers: { Accept: 'application/vnd.pgrst.object+json' }
   })
 )
+
+export const patchReport = asyncActionCreator(
+  types.PATCH_REPORT, 'id', 'payload',
+  ({ id, payload }) => axios.patch(url.resolve(api, `reports?id=eq.${id}`), payload, {
+    headers: {
+      Prefer: 'return=representation',
+      Accept: 'application/vnd.pgrst.object+json'
+    }
+  })
+)
+
+export const forms = {
+  create: actionCreator(types.CREATE_FORM, 'formId', 'initialValue'),
+  update: actionCreator(types.UPDATE_FORM, 'formId', 'value'),
+  destroy: actionCreator(types.DESTROY_FORM, 'formId')
+}
