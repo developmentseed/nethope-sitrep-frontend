@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getReport } from '../actions'
 
 import AsyncStatus from '../components/async-status'
+import Notebook from '../components/notebook'
 
 class ReportDetail extends React.Component {
   componentDidMount () {
@@ -19,6 +20,7 @@ class ReportDetail extends React.Component {
       <div className='report__dl'>
         <AsyncStatus />
         <h3 className='report__title'>{report.name}</h3>
+        <Notebook data={report} />
       </div>
     )
   }

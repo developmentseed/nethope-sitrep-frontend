@@ -90,9 +90,13 @@
     "watchify": "^3.11.0"
   },
   "dependencies": {
+    "ansi_up": "^4.0.3",
     "assert": "^1.4.1",
     "axios": "^0.18.0",
+    "classnames": "^2.2.6",
     "lodash.defaultsdeep": "^4.6.0",
+    "marked": "^0.6.0",
+    "notebookjs": "^0.4.1",
     "object-path": "^0.11.4",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
