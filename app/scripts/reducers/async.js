@@ -6,7 +6,11 @@ const initialState = {
   error: null
 }
 
-const asyncTypes = [types.GET_REPORTS]
+const asyncTypes = [
+  types.GET_REPORTS,
+  types.GET_REPORT,
+  types.PATCH_REPORT
+]
 const SUCCESS = asyncTypes.map(s => s + '_SUCCESS')
 const FAIL = asyncTypes.map(s => s + '_FAIL')
 
