@@ -1,9 +1,11 @@
 'use strict'
 import React from 'react'
 import { get } from 'object-path'
+import { connect } from 'react-redux'
+
+import { readReport } from '../actions'
 
 import Notebook from '../components/notebook'
-import Error from '../components/error'
 
 const errors = {
   json: 'JSON parse error',
@@ -14,40 +16,35 @@ class UpdateReport extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      error: null,
-      payload: null
-    }
-
-    this.upload = (report) => {
+    this.onFileInputChange = (e) => {
+      this.props.readReportStart()
+      const reader = new FileReader()
+      reader.onloadend = this.validateReport
+      reader.readAsText(e.target.files[0])
     }
 
     this.validateReport = (e) => {
       // Validate JSON-ness
       try {
-        var report = JSON.parse(e.target.result)
+        var content = JSON.parse(e.target.result)
       } catch (e) {
-        return this.setState({ error: errors.json })
+        return this.props.readReportFail({ error: new Error(errors.json) })
       }
 
       // Cells should be array with length >= 1
-      if (!Array.isArray(get(report, 'cells')) ||
-        !report.cells.length) {
-        return this.setState({ error: errors.invalid })
+      if (!Array.isArray(get(content, 'cells')) ||
+        !content.cells.length) {
+        return this.props.readReportFail({ error: new Error(errors.invalid) })
       }
 
-      this.setState({
-        error: null,
-        payload: report
-      })
+      const report = Object.assign({}, this.props.report, { content })
+      this.props.readReportSuccess({ report })
     }
 
-    this.onFileInputChange = (e) => {
-      const reader = new FileReader()
-      reader.onloadend = this.validateReport
-      reader.readAsText(e.target.files[0])
+    this.upload = (report) => {
     }
   }
+
   render () {
     return (
       <React.Fragment>
@@ -59,11 +56,16 @@ class UpdateReport extends React.Component {
             />
           </form>
         </div>
-        {this.state.error && <Error message={this.state.error} />}
-        {this.state.payload && <Notebook error={this.state.payload} />}
+        {this.props.nextReport && <Notebook data={this.props.nextReport} />}
       </React.Fragment>
     )
   }
 }
 
-export default UpdateReport
+const mapStateToProps = (state) => ({
+  nextReport: state.uploadReport.report
+})
+
+const mapDispatch = { ...readReport }
+
+export default connect(mapStateToProps, mapDispatch)(UpdateReport)

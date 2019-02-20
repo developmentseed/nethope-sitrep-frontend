@@ -44,3 +44,9 @@ export const forms = {
   update: actionCreator(types.UPDATE_FORM, 'formId', 'value'),
   destroy: actionCreator(types.DESTROY_FORM, 'formId')
 }
+
+export const readReport = {
+  readReportStart: actionCreator(types.READ_REPORT),
+  readReportFail: actionCreator(types.READ_REPORT_FAIL, 'error'),
+  readReportSuccess: actionCreator(types.READ_REPORT_SUCCESS, 'report')
+}
