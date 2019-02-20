@@ -8,13 +8,16 @@ import { getReport, patchReport } from '../actions'
 import AsyncStatus from '../components/async-status'
 import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
+import UpdateReport from '../components/update-report'
 
 class ReportDetail extends React.Component {
   constructor (props) {
     super(props)
+
     this.updateReportMetadata = (payload) => {
       this.props.patchReport({ id: this.id(), payload })
     }
+
     this.download = () => {
       fileDownload(
         JSON.stringify(this.props.report.content, null, 2),
@@ -36,14 +39,6 @@ class ReportDetail extends React.Component {
       return id
     }
     return [id].concat(args).join('-')
-  }
-
-  renderEditReportUI () {
-    return (
-      <div className='report__ctrls'>
-        <input type='file' />
-      </div>
-    )
   }
 
   renderReport () {
@@ -75,7 +70,7 @@ class ReportDetail extends React.Component {
           placeholder='Enter a report name'
           onSubmit={this.updateReportMetadata}
         />
-        { canEdit ? this.renderEditReportUI() : this.renderReport() }
+        { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
       </div>
     )
   }
