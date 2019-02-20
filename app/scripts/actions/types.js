@@ -8,7 +8,7 @@ const types = createTypes([
   ...async('PATCH_REPORT'),
 
   ...async('READ_REPORT'),
-  ...async('UPLOAD_REPORT'),
+  ...async('POST_REPORT'),
 
   'CREATE_FORM',
   'UPDATE_FORM',
