@@ -2,6 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import fileDownload from 'js-file-download'
 import { getReport, patchReport } from '../actions'
 
 import AsyncStatus from '../components/async-status'
@@ -14,7 +15,15 @@ class ReportDetail extends React.Component {
     this.updateReportMetadata = (payload) => {
       this.props.patchReport({ id: this.id(), payload })
     }
+    this.download = () => {
+      fileDownload(
+        JSON.stringify(this.props.report.content, null, 2),
+        `${this.props.report.name}.ipynb`,
+        'application/json'
+      )
+    }
   }
+
   componentDidMount () {
     if (!this.props.report) {
       this.props.getReport({ id: this.id() })
@@ -46,6 +55,10 @@ class ReportDetail extends React.Component {
           onSubmit={this.updateReportMetadata}
         />
         { !canEdit && <Link to={`/reports/${this.id()}/update`}>Update this notebook</Link> }
+        <div className='report__ctrls'>
+          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
+          <button className='report__ctrl report__ctrl__up' onClick={this.upload}>Upload a new version</button>
+        </div>
         <Notebook data={report} />
       </div>
     )

@@ -94,6 +94,7 @@
     "assert": "^1.4.1",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "js-file-download": "^0.4.4",
     "lodash.defaultsdeep": "^4.6.0",
     "marked": "^0.6.0",
     "notebookjs": "^0.4.1",
