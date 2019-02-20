@@ -3,6 +3,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
+import slugify from 'slugify'
+
 import { getReport, patchReport } from '../actions'
 
 import AsyncStatus from '../components/async-status'
@@ -21,7 +23,7 @@ class ReportDetail extends React.Component {
     this.download = () => {
       fileDownload(
         JSON.stringify(this.props.report.content, null, 2),
-        `${this.props.report.name}.ipynb`,
+        `${slugify(this.props.report.name)}.ipynb`,
         'application/json'
       )
     }
