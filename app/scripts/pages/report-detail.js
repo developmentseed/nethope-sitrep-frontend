@@ -38,6 +38,27 @@ class ReportDetail extends React.Component {
     return [id].concat(args).join('-')
   }
 
+  renderEditReportUI () {
+    return (
+      <div className='report__ctrls'>
+        <input type='file' />
+      </div>
+    )
+  }
+
+  renderReport () {
+    const { report } = this.props
+    return (
+      <React.Fragment>
+        <div className='report__ctrls'>
+          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
+          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
+        </div>
+        <Notebook data={report} />
+      </React.Fragment>
+    )
+  }
+
   render () {
     const { report, match } = this.props
     if (!report) return null
@@ -54,12 +75,7 @@ class ReportDetail extends React.Component {
           placeholder='Enter a report name'
           onSubmit={this.updateReportMetadata}
         />
-        { !canEdit && <Link to={`/reports/${this.id()}/update`}>Update this notebook</Link> }
-        <div className='report__ctrls'>
-          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
-          <button className='report__ctrl report__ctrl__up' onClick={this.upload}>Upload a new version</button>
-        </div>
-        <Notebook data={report} />
+        { canEdit ? this.renderEditReportUI() : this.renderReport() }
       </div>
     )
   }
