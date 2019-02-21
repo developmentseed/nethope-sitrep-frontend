@@ -13,7 +13,7 @@ function reducer (state = initialState, action) {
 
     case types.GET_REPORT_VERSIONS_SUCCESS:
       let reports = getAsyncResponseData(action).map(setDefaultProps)
-      let next = _keyBy(reports, d => d['doc_id'])
+      let next = _keyBy(reports, 'id')
       return { ...state, ...next }
   }
   return state
