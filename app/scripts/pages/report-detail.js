@@ -11,6 +11,7 @@ import AsyncStatus from '../components/async-status'
 import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
 import UpdateReport from '../components/update-report'
+import Versions from '../components/versions'
 
 class ReportDetail extends React.Component {
   constructor (props) {
@@ -58,6 +59,7 @@ class ReportDetail extends React.Component {
           <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
           <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
         </div>
+        <Versions latest={report}/>
         <Notebook data={report} />
       </React.Fragment>
     )
