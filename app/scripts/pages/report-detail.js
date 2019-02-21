@@ -35,6 +35,13 @@ class ReportDetail extends React.Component {
     }
   }
 
+  componentDidUpdate (prevProps) {
+    const id = this.id()
+    if (id !== prevProps.match.params.reportId && !this.props.report) {
+      this.props.getReport({ id })
+    }
+  }
+
   id (...args) {
     const id = this.props.match.params.reportId
     if (!args.length) {
