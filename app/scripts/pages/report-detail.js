@@ -59,7 +59,7 @@ class ReportDetail extends React.Component {
           <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
           <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
         </div>
-        <Versions latest={report}/>
+        <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
     )

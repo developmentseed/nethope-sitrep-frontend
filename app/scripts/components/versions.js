@@ -10,21 +10,21 @@ class Versions extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.latest['doc_id'] !== prevProps.latest['doc_id']) {
-    this.getVersions()
+    if (this.props.docID !== prevProps.docID) {
+      this.getVersions()
     }
   }
 
   getVersions () {
-    this.props.getReportVersions({ docID: this.props.latest['doc_id'] })
+    this.props.getReportVersions({ docID: this.props.docID })
   }
 
   render () {
-    const { versions } = this.props
-    if (versions.length <= 1) return null
+    const { older, newer } = this.props
     return (
       <div className='versions'>
-        <p className='versions__count'>{versions.length - 1} older version(s) available.</p>
+        { older.length > 0 && <p className='versions__count'>{older.length} older version(s) available.</p> }
+        { newer.length > 0 && <p className='versions__count'>{newer.length} newer version(s) available.</p> }
       </div>
     )
   }
@@ -36,13 +36,16 @@ const mapDispatch = {
 
 const mapStateToProps = (state, props) => {
   // Get all documents with the same version,
-  // sorted chronologically.
-  const docID = props.latest['doc_id']
+  // then return the IDs of those that are older/newer.
+  const { docID, current } = props
   const { reportMap } = state
+  const createdAt = reportMap[current]['created_at']
   const versions = Object.values(reportMap)
-  .filter(report => report['doc_id'] === docID)
-  .sort((a, b) => a['created_at'] < b['created_at'] ? -1 : 1)
-  return { versions }
+    .filter(report => report['doc_id'] === docID)
+  return {
+    older: versions.filter(d => d['created_at'] < createdAt).map(d => d.id),
+    newer: versions.filter(d => d['created_at'] > createdAt).map(d => d.id)
+  }
 }
 
 export default connect(mapStateToProps, mapDispatch)(Versions)
