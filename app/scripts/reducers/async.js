@@ -2,6 +2,7 @@
 import types from '../actions/types'
 
 const initialState = {
+  type: null,
   loading: false,
   error: null
 }
@@ -9,18 +10,20 @@ const initialState = {
 const asyncTypes = [
   types.GET_REPORTS,
   types.GET_REPORT,
-  types.PATCH_REPORT
+  types.PATCH_REPORT,
+  types.READ_REPORT,
+  types.POST_REPORT
 ]
 const SUCCESS = asyncTypes.map(s => s + '_SUCCESS')
 const FAIL = asyncTypes.map(s => s + '_FAIL')
 
-export default function reducer (state = initialState, action) {
-  if (asyncTypes.indexOf(action.type) >= 0) {
-    return { ...state, loading: true }
-  } else if (SUCCESS.indexOf(action.type) >= 0) {
-    return { ...state, loading: false, error: null }
-  } else if (FAIL.indexOf(action.type) >= 0) {
-    return { ...state, loading: false, error: action.error }
+export default function reducer (state = initialState, { type, payload }) {
+  if (asyncTypes.indexOf(type) >= 0) {
+    return { ...state, type, loading: true }
+  } else if (SUCCESS.indexOf(type) >= 0) {
+    return { ...state, type, loading: false, error: null }
+  } else if (FAIL.indexOf(type) >= 0) {
+    return { ...state, type, loading: false, error: payload.error }
   }
   return state
 }

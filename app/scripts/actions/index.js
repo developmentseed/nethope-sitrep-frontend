@@ -39,8 +39,26 @@ export const patchReport = asyncActionCreator(
   })
 )
 
+export const postReport = asyncActionCreator(
+  types.POST_REPORT, 'payload', 'lastReport',
+  ({ payload }) => axios.post(url.resolve(api, 'reports'), payload, {
+    headers: {
+      Prefer: 'return=representation',
+      Accept: 'application/vnd.pgrst.object+json'
+    }
+  })
+)
+
 export const forms = {
   create: actionCreator(types.CREATE_FORM, 'formId', 'initialValue'),
   update: actionCreator(types.UPDATE_FORM, 'formId', 'value'),
   destroy: actionCreator(types.DESTROY_FORM, 'formId')
 }
+
+export const readReport = {
+  readReportStart: actionCreator(types.READ_REPORT),
+  readReportFail: actionCreator(types.READ_REPORT_FAIL, 'error'),
+  readReportSuccess: actionCreator(types.READ_REPORT_SUCCESS, 'report')
+}
+
+export const clearUploadState = actionCreator(types.CLEAR_UPLOAD_REPORT_STATE)

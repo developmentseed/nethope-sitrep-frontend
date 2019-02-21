@@ -2,22 +2,43 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import fileDownload from 'js-file-download'
+import slugify from 'slugify'
+
 import { getReport, patchReport } from '../actions'
 
 import AsyncStatus from '../components/async-status'
 import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
+import UpdateReport from '../components/update-report'
 
 class ReportDetail extends React.Component {
   constructor (props) {
     super(props)
+
     this.updateReportMetadata = (payload) => {
       this.props.patchReport({ id: this.id(), payload })
     }
+
+    this.download = () => {
+      fileDownload(
+        JSON.stringify(this.props.report.content, null, 2),
+        `${slugify(this.props.report.name)}.ipynb`,
+        'application/json'
+      )
+    }
   }
+
   componentDidMount () {
     if (!this.props.report) {
       this.props.getReport({ id: this.id() })
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    const id = this.id()
+    if (id !== prevProps.match.params.reportId && !this.props.report) {
+      this.props.getReport({ id })
     }
   }
 
@@ -27,6 +48,19 @@ class ReportDetail extends React.Component {
       return id
     }
     return [id].concat(args).join('-')
+  }
+
+  renderReport () {
+    const { report } = this.props
+    return (
+      <React.Fragment>
+        <div className='report__ctrls'>
+          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
+          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
+        </div>
+        <Notebook data={report} />
+      </React.Fragment>
+    )
   }
 
   render () {
@@ -45,8 +79,7 @@ class ReportDetail extends React.Component {
           placeholder='Enter a report name'
           onSubmit={this.updateReportMetadata}
         />
-        { !canEdit && <Link to={`/reports/${this.id()}/update`}>Update this notebook</Link> }
-        <Notebook data={report} />
+        { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
       </div>
     )
   }

@@ -7,6 +7,11 @@ const types = createTypes([
   ...async('GET_REPORT'),
   ...async('PATCH_REPORT'),
 
+  ...async('READ_REPORT'),
+  ...async('POST_REPORT'),
+
+  'CLEAR_UPLOAD_REPORT_STATE',
+
   'CREATE_FORM',
   'UPDATE_FORM',
   'DESTROY_FORM'
