@@ -10,6 +10,7 @@ const initialState = {
 const asyncTypes = [
   types.GET_REPORTS,
   types.GET_REPORT,
+  types.GET_REPORT_VERSIONS,
   types.PATCH_REPORT,
   types.READ_REPORT,
   types.POST_REPORT
