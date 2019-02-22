@@ -6,6 +6,7 @@ const types = createTypes([
   ...async('GET_REPORTS'),
   ...async('GET_REPORT'),
   ...async('PATCH_REPORT'),
+  ...async('GET_REPORT_VERSIONS'),
 
   ...async('READ_REPORT'),
   ...async('POST_REPORT'),

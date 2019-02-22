@@ -4,7 +4,7 @@ import { get } from 'object-path'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { readReport, postReport, clearUploadState } from '../actions'
+import { readReport, postReport } from '../actions'
 
 import Notebook from '../components/notebook'
 
@@ -52,30 +52,10 @@ class UpdateReport extends React.Component {
     }
   }
 
-  componentDidUpdate (prevProps) {
-    const { nextReportID } = this.props
-    // Report upload success: clear upload state and render the new report.
-    if (nextReportID && !prevProps.nextReportID) {
-      setTimeout(() => {
-        this.props.clearUploadState()
-        this.props.history.push(`/reports/${nextReportID}`)
-      }, 800)
-    }
-  }
-
-  renderSuccess () {
-    return (
-      <div className='success'>
-        <p>Upload successful! Loading new report...</p>
-      </div>
-    )
-  }
-
   renderUploadNotebookUI () {
     return (
       <div className='report__upload'>
         <button onClick={this.upload}>Upload this notebook</button>
-        {this.props.nextReportID && this.renderSuccess() }
         <div className='report__upload__next'>
           <Notebook data={this.props.nextReport} />
         </div>
@@ -101,10 +81,9 @@ class UpdateReport extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  nextReport: state.uploadReport.nextReport,
-  nextReportID: state.uploadReport.nextReportID
+  nextReport: state.uploadReport.nextReport
 })
 
-const mapDispatch = { ...readReport, postReport, clearUploadState }
+const mapDispatch = { ...readReport, postReport }
 
 export default withRouter(connect(mapStateToProps, mapDispatch)(UpdateReport))

@@ -29,6 +29,11 @@ export const getReport = asyncActionCreator(
   })
 )
 
+export const getReportVersions = asyncActionCreator(
+  types.GET_REPORT_VERSIONS, 'docID',
+  ({ docID }) => axios.get(url.resolve(api, `reports?doc_id=eq.${docID}`))
+)
+
 export const patchReport = asyncActionCreator(
   types.PATCH_REPORT, 'id', 'payload',
   ({ id, payload }) => axios.patch(url.resolve(api, `reports?id=eq.${id}`), payload, {
