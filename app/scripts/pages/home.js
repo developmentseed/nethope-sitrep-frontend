@@ -2,8 +2,10 @@ import React from 'react'
 class Home extends React.Component {
   render () {
     return (
-      <div>
-        <p>Computer!</p>
+      <div className='page page__home'>
+        <div className='inner'>
+          <p>Homepage</p>
+        </div>
       </div>
     )
   }

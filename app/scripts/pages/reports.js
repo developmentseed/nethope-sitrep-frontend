@@ -14,9 +14,11 @@ class Reports extends React.Component {
   render () {
     const { reports } = this.props
     return (
-      <div className='reports'>
-        <AsyncStatus />
-        {reports.map(report => <Report key={report.id} report={report} />)}
+      <div className='page page__reports'>
+        <div className='inner'>
+          <AsyncStatus />
+          {reports.map(report => <Report key={report.id} report={report} />)}
+        </div>
       </div>
     )
   }

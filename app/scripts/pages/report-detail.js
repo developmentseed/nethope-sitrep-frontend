@@ -90,19 +90,21 @@ class ReportDetail extends React.Component {
     if (!report) return null
     const canEdit = /update/.test(match.path)
     return (
-      <div className='report__dl'>
-        <AsyncStatus />
-        {this.props.nextReportID && this.renderUploadSuccess() }
-        <EditableText
-          className='report__name'
-          initialValue={report.name}
-          schemaPropertyName='name'
-          formId={this.id('name')}
-          canEdit={canEdit}
-          placeholder='Enter a report name'
-          onSubmit={this.updateReportMetadata}
-        />
-        { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
+      <div className='page page__report'>
+        <div className='inner'>
+          <AsyncStatus />
+          {this.props.nextReportID && this.renderUploadSuccess() }
+          <EditableText
+            className='report__name'
+            initialValue={report.name}
+            schemaPropertyName='name'
+            formId={this.id('name')}
+            canEdit={canEdit}
+            placeholder='Enter a report name'
+            onSubmit={this.updateReportMetadata}
+          />
+          { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
+        </div>
       </div>
     )
   }
