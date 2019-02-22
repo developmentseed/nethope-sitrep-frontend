@@ -1,0 +1,31 @@
+.async {
+  display: inline-block;
+  height: 1;
+}
+
+.async__loading {
+  line-height: 1;
+  -webkit-animation: rotation 2s infinite linear;
+          animation: rotation 2s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+  from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(-359deg); }
+}
+@keyframes rotation {
+  from { transform: rotate(0deg); }
+    to { transform: rotate(-359deg); }
+}
+
+.async__status {
+  display: flex;
+}
+
+.async__error {
+  color: $red;
+}
+
+.async__error__icon {
+  margin-right: 0.5em;
+}

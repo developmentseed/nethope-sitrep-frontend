@@ -3,14 +3,19 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 class AsyncState extends React.Component {
+  renderLoading () {
+    return <span className='async__status async__loading collecticons collecticons-arrow-spin-ccw' />
+  }
+
+  renderError (e) {
+    return <span className='async__status async__error'><span className='async__error__icon collecticons-circle-exclamation' /> {e.message}</span>
+  }
+
   render () {
-    const { loading, error } = this.props
-    if (!loading && !error) return null
+    const { loading, error, timestamp } = this.props
     return (
       <div className='async'>
-        { loading ? <span className='async__status async__loading'>Loading</span>
-          : <span className='async__status async__error'>{error.message}</span>
-        }
+        { loading ? this.renderLoading() : error ? this.renderError(error) : null }
       </div>
     )
   }
@@ -18,7 +23,8 @@ class AsyncState extends React.Component {
 
 const mapStateToProps = (state) => ({
   loading: state.async.loading,
-  error: state.async.error
+  error: state.async.error,
+  timestamp: state.async.timestamp
 })
 
 export default connect(mapStateToProps)(AsyncState)

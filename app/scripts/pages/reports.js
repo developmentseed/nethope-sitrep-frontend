@@ -18,11 +18,11 @@ class Reports extends React.Component {
         <div className='page__header'>
           <div className='inner'>
             <h2 className='page__title'>Recent Reports</h2>
-            <AsyncStatus />
           </div>
         </div>
         <div className='section'>
           <div className='inner'>
+            <AsyncStatus />
             <div className='reports__cont'>
               {reports.map(report => <Report key={report.id} report={report} />)}
             </div>

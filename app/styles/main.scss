@@ -21,6 +21,7 @@
  */
 
 @import "bourbon";
+@import "vendor/collecticons";
 
 
 /* Reboot
@@ -49,5 +50,6 @@
 @import "base";
 @import "page";
 @import "modal";
+@import "notifications";
 @import "nav";
 @import "report";
