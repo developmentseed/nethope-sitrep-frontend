@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
+import { get } from 'object-path'
 
 import { getReportVersions } from '../actions'
 
@@ -39,7 +40,7 @@ const mapStateToProps = (state, props) => {
   // then return the IDs of those that are older/newer.
   const { docID, current } = props
   const { reportMap } = state
-  const createdAt = reportMap[current]['created_at']
+  const createdAt = get(reportMap, [current, 'created_at'])
   const versions = Object.values(reportMap)
     .filter(report => report['doc_id'] === docID)
   return {
