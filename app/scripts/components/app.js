@@ -5,7 +5,7 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <Nav />
-        <main>
+        <main className='main'>
           {this.props.children || null}
         </main>
       </React.Fragment>
