@@ -12,7 +12,7 @@ class AsyncState extends React.Component {
   }
 
   render () {
-    const { loading, error, timestamp } = this.props
+    const { loading, error } = this.props
     return (
       <div className='async'>
         { loading ? this.renderLoading() : error ? this.renderError(error) : null }
@@ -24,7 +24,6 @@ class AsyncState extends React.Component {
 const mapStateToProps = (state) => ({
   loading: state.async.loading,
   error: state.async.error,
-  timestamp: state.async.timestamp
 })
 
 export default connect(mapStateToProps)(AsyncState)
