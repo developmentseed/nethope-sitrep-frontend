@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 
-import { getReport, patchReport } from '../actions'
+import { getReport, patchReport, clearUploadState } from '../actions'
 
 import AsyncStatus from '../components/async-status'
 import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
 import UpdateReport from '../components/update-report'
+import ForkReport from '../components/fork-report'
 import Versions from '../components/versions'
 
 class ReportDetail extends React.Component {
@@ -37,9 +38,19 @@ class ReportDetail extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
+    // Router navigated to new report.
     const id = this.id()
     if (id !== prevProps.match.params.reportId && !this.props.report) {
       this.props.getReport({ id })
+    }
+
+    // Report upload success: clear upload state and render the new report.
+    const { nextReportID } = this.props
+    if (nextReportID && !prevProps.nextReportID) {
+      setTimeout(() => {
+        this.props.clearUploadState()
+        this.props.history.push(`/reports/${nextReportID}`)
+      }, 800)
     }
   }
 
@@ -59,9 +70,18 @@ class ReportDetail extends React.Component {
           <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
           <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
         </div>
+        <ForkReport current={report.id} />
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
+    )
+  }
+
+  renderUploadSuccess () {
+    return (
+      <div className='success'>
+        <p>Upload successful! Loading new report...</p>
+      </div>
     )
   }
 
@@ -72,6 +92,7 @@ class ReportDetail extends React.Component {
     return (
       <div className='report__dl'>
         <AsyncStatus />
+        {this.props.nextReportID && this.renderUploadSuccess() }
         <EditableText
           className='report__name'
           initialValue={report.name}
@@ -93,12 +114,12 @@ const mapStateToProps = (state, props) => {
   // Check reports list and the report map
   // to see if we already fetched this.
   const report = reportMap[reportId] || reports.find(d => d.id === reportId)
-  return { report }
+  return {
+    report,
+    nextReportID: state.uploadReport.nextReportID
+  }
 }
 
-const mapDispatch = {
-  getReport,
-  patchReport
-}
+const mapDispatch = { getReport, patchReport, clearUploadState }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
