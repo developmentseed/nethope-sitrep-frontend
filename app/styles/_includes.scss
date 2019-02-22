@@ -1,0 +1,18 @@
+$white: #FEFEFE;
+$black: #333333;
+$blue: #0077CC;
+
+$base-font-family: "Roboto", Helvetica, Arial, sans-serif;
+$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+$base-line-height: 1.5;
+
+@mixin row {
+  display: block;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+@mixin prose {
+  display: block;
+  max-width: 520px;
+}
