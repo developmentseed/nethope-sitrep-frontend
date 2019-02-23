@@ -7,8 +7,10 @@ $red: red;
 
 $base-font-size: 16px;
 $base-font-family: "Roboto", Helvetica, Arial, sans-serif;
-$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 $base-line-height: 1.5;
+
+$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+$code-font-size: 14px;
 
 @mixin small-text {
   font-size: 0.875em;
@@ -24,6 +26,12 @@ $base-line-height: 1.5;
   display: block;
   max-width: 980px;
   margin: 0 auto;
+  position: relative;
+}
+
+@mixin code {
+  display: block;
+  max-width: 720px;
   position: relative;
 }
 

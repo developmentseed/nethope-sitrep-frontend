@@ -1,0 +1,36 @@
+.nb-notebook {
+  @include code;
+  font-family: $code-font-family;
+  font-size: $code-font-size;
+}
+
+.nb-cell {
+  position: relative;
+}
+
+.nb-cell + .nb-cell {
+  margin-top: 1.5em;
+}
+
+.nb-output {
+  min-height: 1em;
+  width: 100%;
+  border-right: 1px dotted #CCC;
+}
+
+.nb-output:before, .nb-input:before {
+  position: absolute;
+  font-family: $code-font-family;
+  color: $darkgray;
+  left: -7.5em;
+  width: 7em;
+  text-align: right;
+}
+
+.nb-input:before {
+  content: "In [" attr(data-prompt-number) "]:";
+}
+
+.nb-output:before {
+  content: "Out [" attr(data-prompt-number) "]:";
+}
