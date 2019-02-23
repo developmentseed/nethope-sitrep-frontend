@@ -1,0 +1,141 @@
+$white: #FEFEFE;
+$black: #333333;
+$blue: #0077CC;
+$lightgray: #F7F7F7;
+$darkgray: #555555;
+$red: red;
+$green: #269F42;
+
+$base-font-size: 16px;
+$base-font-family: "Roboto", Helvetica, Arial, sans-serif;
+$base-line-height: 1.5;
+
+$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+$code-font-size: 14px;
+
+$light-border: 1px solid rgba(27, 31, 35, .1);
+$dark-border: 1px solid rgba(27, 31, 35, .3);
+
+@mixin small-text {
+  font-size: 0.875em;
+  line-height: 1.2;
+}
+
+@mixin medium-heading {
+  font-size: 1.25em;
+  line-height: 2;
+}
+
+@mixin row {
+  display: block;
+  max-width: 980px;
+  margin: 0 auto;
+  position: relative;
+}
+
+@mixin code {
+  display: block;
+  max-width: 720px;
+  position: relative;
+}
+
+@mixin prose {
+  display: block;
+  max-width: 520px;
+  position: relative;
+}
+
+@mixin button {
+  -moz-appearance: none;
+  appearance: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  -webkit-user-select: none;
+
+  color: $black;
+  background-color: $lightgray;
+  background-image: linear-gradient(-180deg, $white, $lightgray 90%);
+
+  border: $light-border;
+
+  background-position: -1px -1px;
+  background-repeat: repeat-x;
+  background-size: 110% 110%;
+
+  cursor: pointer;
+  display: inline-block;
+
+  transition: color .2s ease-in-out;
+  user-select: none;
+  &:hover {
+    color: $blue;
+    background-position: -.5em;
+    text-decoration: none;
+    > a {
+      text-decoration: none;
+    }
+  }
+}
+
+@mixin button-confirm {
+  background-color: $green;
+  background-image: linear-gradient(-180deg, lighten($green, 10%), $green 90%);
+  color: #FFFFFF;
+  &:hover {
+    color: #FFFFFF;
+    border: $dark-border;
+  }
+}
+
+@mixin retina {
+  @media
+    only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (min--moz-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx) {
+      @content;
+  }
+}
+
+@mixin print {
+  @media print {
+    @content;
+  }
+}
+
+$medium-width: 768px;
+$large-width: 979px;
+$xlarge-width: 1200px;
+
+@mixin medium {
+  @media only screen and (min-width: #{$medium-width}) and (max-width: #{$large-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin medium-up {
+  @media only screen and (min-width: #{$medium-width}) {
+    @content;
+  }
+}
+
+@mixin large {
+  @media only screen and (min-width: #{$large-width}) and (max-width: #{$xlarge-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin large-up {
+  @media only screen and (min-width: #{$large-width}) {
+    @content;
+  }
+}
+
+@mixin xlarge-up {
+  @media only screen and (min-width: #{$xlarge-width}) {
+    @content;
+  }
+}

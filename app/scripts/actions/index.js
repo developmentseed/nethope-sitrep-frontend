@@ -55,9 +55,9 @@ export const postReport = asyncActionCreator(
 )
 
 export const forms = {
-  create: actionCreator(types.CREATE_FORM, 'formId', 'initialValue'),
-  update: actionCreator(types.UPDATE_FORM, 'formId', 'value'),
-  destroy: actionCreator(types.DESTROY_FORM, 'formId')
+  create: actionCreator(types.CREATE_FORM, 'formID', 'initialValue'),
+  update: actionCreator(types.UPDATE_FORM, 'formID', 'value'),
+  destroy: actionCreator(types.DESTROY_FORM, 'formID')
 }
 
 export const readReport = {

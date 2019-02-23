@@ -3,10 +3,12 @@ import React from 'react'
 import { get } from 'object-path'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
 
-import { readReport, postReport } from '../actions'
+import { readReport, postReport, patchReport } from '../actions'
 
 import Notebook from '../components/notebook'
+import EditableText from '../components/editable-text'
 
 const errors = {
   json: 'JSON parse error',
@@ -16,6 +18,10 @@ const errors = {
 class UpdateReport extends React.Component {
   constructor (props) {
     super(props)
+
+    this.updateReportMetadata = (payload) => {
+      this.props.patchReport({ id: this.props.report.id, payload })
+    }
 
     this.onFileInputChange = (e) => {
       this.props.readReportStart()
@@ -55,7 +61,8 @@ class UpdateReport extends React.Component {
   renderUploadNotebookUI () {
     return (
       <div className='report__upload'>
-        <button onClick={this.upload}>Upload this notebook</button>
+        <button className='report__ctrl report__ctrl__confirm'
+          onClick={this.upload}>Upload this notebook</button>
         <div className='report__upload__next'>
           <Notebook data={this.props.nextReport} />
         </div>
@@ -64,18 +71,39 @@ class UpdateReport extends React.Component {
   }
 
   render () {
+    const { report } = this.props
     return (
-      <React.Fragment>
+      <div>
         <div className='report__ctrls'>
+          <Link className='report__ctrl report__ctrl--small' to={`/reports/${report.id}`}>
+            <span className='collecticons collecticons-arrow-return' />
+            Go back
+          </Link>
+        </div>
+        <div className='report__meta'>
+          <h3 className='report__meta__title'>Edit report metadata</h3>
+          <EditableText
+            canEdit={true}
+            className='report__name'
+            formID={`${report.id}-name`}
+            initialValue={report.name}
+            label={'Name'}
+            placeholder='Enter a report name'
+            onSubmit={this.updateReportMetadata}
+            schemaPropertyName='name'
+          />
+        </div>
+        <div className='report__next'>
+          <h3 className='report__meta__title'>Upload a new version of this report</h3>
           <form className='report__upload' onChange={this.onFileInputChange}>
             <input type='file'
               accept='application/json,.ipynb'
               multiple={false}
             />
           </form>
+          {this.props.nextReport && this.renderUploadNotebookUI()}
         </div>
-        {this.props.nextReport && this.renderUploadNotebookUI()}
-      </React.Fragment>
+      </div>
     )
   }
 }
@@ -84,6 +112,6 @@ const mapStateToProps = (state) => ({
   nextReport: state.uploadReport.nextReport
 })
 
-const mapDispatch = { ...readReport, postReport }
+const mapDispatch = { ...readReport, postReport, patchReport }
 
 export default withRouter(connect(mapStateToProps, mapDispatch)(UpdateReport))

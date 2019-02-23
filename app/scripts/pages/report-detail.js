@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 
-import { getReport, patchReport, clearUploadState } from '../actions'
+import { getReport, clearUploadState } from '../actions'
 
 import AsyncStatus from '../components/async-status'
-import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
 import UpdateReport from '../components/update-report'
 import ForkReport from '../components/fork-report'
@@ -17,10 +16,6 @@ import Versions from '../components/versions'
 class ReportDetail extends React.Component {
   constructor (props) {
     super(props)
-
-    this.updateReportMetadata = (payload) => {
-      this.props.patchReport({ id: this.id(), payload })
-    }
 
     this.download = () => {
       fileDownload(
@@ -67,10 +62,14 @@ class ReportDetail extends React.Component {
     return (
       <React.Fragment>
         <div className='report__ctrls'>
-          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
-          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
+          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>
+            <span className='collecticons collecticons-download' /> Download report
+          </button>
+          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
+            <span className='collecticons collecticons-wrench' />Update this report
+          </Link>
+          <ForkReport current={report.id} />
         </div>
-        <ForkReport current={report.id} />
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
@@ -90,19 +89,19 @@ class ReportDetail extends React.Component {
     if (!report) return null
     const canEdit = /update/.test(match.path)
     return (
-      <div className='report__dl'>
-        <AsyncStatus />
-        {this.props.nextReportID && this.renderUploadSuccess() }
-        <EditableText
-          className='report__name'
-          initialValue={report.name}
-          schemaPropertyName='name'
-          formId={this.id('name')}
-          canEdit={canEdit}
-          placeholder='Enter a report name'
-          onSubmit={this.updateReportMetadata}
-        />
-        { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
+      <div className='page page__report'>
+        <div className='page__header'>
+          <div className='inner'>
+            <h2 className='page__title'>{report.name}</h2>
+          </div>
+        </div>
+        <div className='section'>
+          <div className='inner'>
+            <AsyncStatus />
+            {this.props.nextReportID && this.renderUploadSuccess() }
+            { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
+          </div>
+        </div>
       </div>
     )
   }
@@ -120,6 +119,6 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatch = { getReport, patchReport, clearUploadState }
+const mapDispatch = { getReport, clearUploadState }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
