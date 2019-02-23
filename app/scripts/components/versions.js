@@ -23,7 +23,7 @@ class Versions extends React.Component {
   render () {
     const { older, newer } = this.props
     return (
-      <div className='versions'>
+      <div className='report__versions'>
         { older.length > 0 && <p className='versions__count'>{older.length} older version(s) available.</p> }
         { newer.length > 0 && <p className='versions__count'>{newer.length} newer version(s) available.</p> }
       </div>

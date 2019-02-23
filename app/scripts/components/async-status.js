@@ -23,7 +23,7 @@ class AsyncState extends React.Component {
 
 const mapStateToProps = (state) => ({
   loading: state.async.loading,
-  error: state.async.error,
+  error: state.async.error
 })
 
 export default connect(mapStateToProps)(AsyncState)

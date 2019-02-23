@@ -49,3 +49,24 @@ a.report__inner:hover {
   @include small-text;
   color: $darkgray;
 }
+
+.report__ctrls {
+  margin-bottom: 1em;
+}
+
+.report__ctrl {
+  @include button;
+  @include small-text;
+  font-weight: bold;
+  padding: 1em;
+  @include medium-up {
+    padding: 2em;
+  }
+  .collecticons {
+    margin-right: 0.5em;
+  }
+}
+
+.report__versions {
+  margin-bottom: 1em;
+}

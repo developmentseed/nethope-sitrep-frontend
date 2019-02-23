@@ -67,10 +67,14 @@ class ReportDetail extends React.Component {
     return (
       <React.Fragment>
         <div className='report__ctrls'>
-          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>Download report</button>
-          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>Update this report</Link>
+          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>
+            <span className='collecticons collecticons-download' /> Download report
+          </button>
+          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
+            <span className='collecticons collecticons-wrench' />Update this report
+          </Link>
+          <ForkReport current={report.id} />
         </div>
-        <ForkReport current={report.id} />
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>

@@ -42,10 +42,9 @@ a:link {
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s;
-  &:hover {
-    color: $blue;
-    text-decoration: underline;
-  }
+}
+a:hover {
+  color: $blue;
 }
 
 input, select, textarea {
@@ -53,4 +52,8 @@ input, select, textarea {
   height: auto;
   width: auto;
   margin: 0;
+}
+
+.collecticons {
+  line-height: 1;
 }

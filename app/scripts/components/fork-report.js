@@ -40,10 +40,12 @@ class ForkReport extends React.Component {
 
   render () {
     return (
-      <div className='fork__ctrl'>
-        <button className='report__ctrl report__ctrl__fork' onClick={this.toggleConfirm}>Fork this report</button>
+      <React.Fragment>
+        <button className='report__ctrl report__ctrl__fork' onClick={this.toggleConfirm}>
+          <span className='collecticons collecticons-git-fork' /> Fork this report
+        </button>
         { this.state.showConfirm && <Modal cancel={this.toggleConfirm}>{this.renderPrompt()}</Modal> }
-      </div>
+      </React.Fragment>
     )
   }
 }
