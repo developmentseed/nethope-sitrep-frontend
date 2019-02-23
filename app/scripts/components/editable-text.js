@@ -16,7 +16,7 @@ class EditableText extends React.Component {
     }
 
     this.update = (e) => {
-      this.props.update({ formId: this.props.formId, value: e.currentTarget.value })
+      this.props.update({ formID: this.props.formID, value: e.currentTarget.value })
     }
 
     this.onSubmit = (e) => {
@@ -28,24 +28,27 @@ class EditableText extends React.Component {
   }
 
   componentDidMount () {
-    this.props.create({ formId: this.props.formId, initialValue: this.props.initialValue || '' })
+    this.props.create({ formID: this.props.formID, initialValue: this.props.initialValue || '' })
   }
 
   componentWillUnmount () {
-    this.props.destroy({ formId: this.props.formId })
+    this.props.destroy({ formID: this.props.formID })
   }
 
   renderEditable () {
     const placeholder = this.props.placeholder || 'Enter a value'
     const disabled = this.isDisabled()
     return (
-      <form className='form form--inline' onSubmit={this.onSubmit}>
-        <input type='text'
+      <form className='editable__form' onSubmit={this.onSubmit}>
+        <label className='editable__label' htmlFor={this.props.formID}>{this.props.label}</label>
+        <input className='editable__input'
+          type='text'
+          id={this.props.formID}
           placeholder={placeholder}
           value={this.props.value}
           onChange={this.update}
         />
-        <input type='submit' value='Submit' className={c('submit', { disabled })} />
+        <input type='submit' value='Submit' className={c('editable__submit', { disabled })} />
       </form>
     )
   }
@@ -70,7 +73,7 @@ class EditableText extends React.Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    value: get(state.forms, props.formId, ''),
+    value: get(state.forms, props.formID, ''),
     loading: state.async.loading
   }
 }

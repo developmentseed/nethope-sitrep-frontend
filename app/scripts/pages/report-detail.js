@@ -5,10 +5,9 @@ import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 
-import { getReport, patchReport, clearUploadState } from '../actions'
+import { getReport, clearUploadState } from '../actions'
 
 import AsyncStatus from '../components/async-status'
-import EditableText from '../components/editable-text'
 import Notebook from '../components/notebook'
 import UpdateReport from '../components/update-report'
 import ForkReport from '../components/fork-report'
@@ -17,10 +16,6 @@ import Versions from '../components/versions'
 class ReportDetail extends React.Component {
   constructor (props) {
     super(props)
-
-    this.updateReportMetadata = (payload) => {
-      this.props.patchReport({ id: this.id(), payload })
-    }
 
     this.download = () => {
       fileDownload(
@@ -104,15 +99,6 @@ class ReportDetail extends React.Component {
           <div className='inner'>
             <AsyncStatus />
             {this.props.nextReportID && this.renderUploadSuccess() }
-            <EditableText
-              className='report__name'
-              initialValue={report.name}
-              schemaPropertyName='name'
-              formId={this.id('name')}
-              canEdit={canEdit}
-              placeholder='Enter a report name'
-              onSubmit={this.updateReportMetadata}
-            />
             { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
           </div>
         </div>
@@ -133,6 +119,6 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatch = { getReport, patchReport, clearUploadState }
+const mapDispatch = { getReport, clearUploadState }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
