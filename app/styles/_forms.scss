@@ -1,0 +1,28 @@
+.editable__form {
+  @include code;
+  display: flex;
+  margin-top: 1em;
+  flex-wrap: wrap;
+}
+
+.editable__label {
+  @include small-text;
+  font-weight: bold;
+  line-height: 2;
+  width: 100%;
+}
+
+.editable__input,
+.editable__submit {
+  padding: 0.5em;
+  border: $light-border;
+}
+
+.editable__input {
+  flex-grow: 2;
+}
+
+.editable__submit {
+  @include button;
+  padding: 0.5em 2em;
+}

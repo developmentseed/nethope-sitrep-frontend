@@ -1,3 +1,7 @@
+.notebook {
+  margin: 2em 0 4em;
+}
+
 .nb-notebook {
   @include code;
   font-family: $code-font-family;

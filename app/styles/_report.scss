@@ -40,19 +40,9 @@ a.report__inner:hover {
   }
 }
 
-.report__title {
-  @include medium-heading;
-  font-weight: normal;
-}
-
-.report__meta {
-  @include small-text;
-  color: $darkgray;
-}
-
 .report__ctrls {
-  display: inline;
-  margin-bottom: 1em;
+  display: inline-block;
+  margin: 1em 0;
   position: relative;
   .modal__cont {
     position: absolute;
@@ -76,6 +66,24 @@ a.report__inner:hover {
   }
 }
 
+.report__ctrl__confirm {
+  @include button-confirm;
+  font-size: 1em;
+}
+
+.report__ctrl--small {
+  padding: 1em;
+}
+
 .report__versions {
   margin-bottom: 1em;
+}
+
+.report__next,
+.report__meta {
+  margin-top: 3em;
+}
+
+.report__upload {
+  margin-top: 1em;
 }
