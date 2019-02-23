@@ -31,9 +31,11 @@ class ForkReport extends React.Component {
   renderPrompt () {
     return (
       <React.Fragment>
-        <p>This will create a copy of this report that you can edit</p>
-        <button onClick={this.fork}>Fork it</button>
-        <button onClick={this.toggleConfirm}>Cancel</button>
+        <div className='modal__inner'>
+          <p className='modal__prompt'>This will create a copy of this report that you can edit</p>
+          <button className='modal__ctrl modal__ctrl--confirm' onClick={this.fork}>Confirm</button>
+          <button className='modal__ctrl' onClick={this.toggleConfirm}>Cancel</button>
+        </div>
       </React.Fragment>
     )
   }
@@ -44,7 +46,7 @@ class ForkReport extends React.Component {
         <button className='report__ctrl report__ctrl__fork' onClick={this.toggleConfirm}>
           <span className='collecticons collecticons-git-fork' /> Fork this report
         </button>
-        { this.state.showConfirm && <Modal cancel={this.toggleConfirm}>{this.renderPrompt()}</Modal> }
+        { this.state.showConfirm && <Modal transparent={true} cancel={this.toggleConfirm}>{this.renderPrompt()}</Modal> }
       </React.Fragment>
     )
   }

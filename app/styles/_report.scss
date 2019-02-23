@@ -16,7 +16,7 @@
 
 .report__inner {
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-  border-bottom: 1px solid $lightgray;
+  border-bottom: $light-border;
   background-color: $white;
   display: block;
   padding: 1em;
@@ -51,7 +51,16 @@ a.report__inner:hover {
 }
 
 .report__ctrls {
+  display: inline;
   margin-bottom: 1em;
+  position: relative;
+  .modal__cont {
+    position: absolute;
+    right: 0;
+    margin-top: .5em;
+    min-width: 240px;
+    text-align: right;
+  }
 }
 
 .report__ctrl {
