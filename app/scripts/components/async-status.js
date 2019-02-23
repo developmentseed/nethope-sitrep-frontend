@@ -14,8 +14,10 @@ class AsyncState extends React.Component {
   render () {
     const { loading, error } = this.props
     return (
-      <div className='async'>
-        { loading ? this.renderLoading() : error ? this.renderError(error) : null }
+      <div>
+        <div className='async'>
+          { loading ? this.renderLoading() : error ? this.renderError(error) : null }
+        </div>
       </div>
     )
   }
