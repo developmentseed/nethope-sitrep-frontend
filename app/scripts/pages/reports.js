@@ -28,7 +28,6 @@ class Reports extends React.Component {
             </div>
           </div>
         </div>
-        <div id='bg-test' />
       </div>
     )
   }
