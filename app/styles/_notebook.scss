@@ -37,21 +37,23 @@
   border-right: 1px dotted #CCC;
 }
 
-.nb-output:before, .nb-input:before {
-  position: absolute;
-  font-family: $code-font-family;
-  color: $darkgray;
-  left: -7.5em;
-  width: 7em;
-  text-align: right;
-}
+@include large-up {
+  .nb-output:before, .nb-input:before {
+    position: absolute;
+    font-family: $code-font-family;
+    color: $darkgray;
+    left: -7.5em;
+    width: 7em;
+    text-align: right;
+  }
 
-.nb-input:before {
-  content: "In [" attr(data-prompt-number) "]:";
-}
+  .nb-input:before {
+    content: "In [" attr(data-prompt-number) "]:";
+  }
 
-.nb-output:before {
-  content: "Out [" attr(data-prompt-number) "]:";
+  .nb-output:before {
+    content: "Out [" attr(data-prompt-number) "]:";
+  }
 }
 
 .nb-input pre {
