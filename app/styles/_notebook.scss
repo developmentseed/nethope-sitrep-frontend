@@ -2,13 +2,32 @@
   @include code;
   font-family: $code-font-family;
   font-size: $code-font-size;
+  color: #000000;
+
+  code {
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
 }
 
 .nb-cell {
   position: relative;
 }
 
-.nb-cell + .nb-cell {
+.nb-input, .nb-output {
   margin-top: 1.5em;
 }
 
@@ -33,4 +52,14 @@
 
 .nb-output:before {
   content: "Out [" attr(data-prompt-number) "]:";
+}
+
+.nb-input pre {
+  background-color: $lightgray;
+  padding: 1em;
+  overflow: auto;
+}
+
+.nb-output pre {
+  padding: 0.1em;
 }
