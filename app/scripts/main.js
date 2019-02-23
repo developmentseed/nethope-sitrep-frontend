@@ -16,10 +16,10 @@ const Root = () => (
     <HashRouter>
       <App>
         <Switch>
+          <Route exact path='/' component={Home} />
           <Route exact path='/reports' component={Reports} />
           <Route exact path='/reports/:reportId' component={ReportDetail} />
           <Route exact path='/reports/:reportId/update' component={ReportDetail} />
-          <Route exact path='/' component={Home} />
         </Switch>
       </App>
     </HashRouter>
