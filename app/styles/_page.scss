@@ -1,5 +1,6 @@
 .inner {
   @include row;
+  padding: 0 1em;
 }
 
 .page__header {

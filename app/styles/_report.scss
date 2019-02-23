@@ -1,9 +1,51 @@
 .reports__cont {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .report {
-  margin: 1em 0;
+  margin-bottom: 2em;
+  width: 48%;
+  @include medium-up {
+    width: 32%;
+  }
+}
+
+.report__inner {
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+  border-bottom: 1px solid $lightgray;
+  background-color: $white;
+  display: block;
+  padding: 1em;
+}
+
+/* This long selector is to overrule a:hover */
+a.report__inner:hover {
+  border-bottom: 1px solid $blue;
+  color: $black;
+  text-decoration: none;
+}
+
+.report__image {
+  width: 100%;
+  height: 160px;
+  margin: 0.5em 0;
+  overflow: hidden;
+  > img {
+    box-sizing: content-box;
+    width: 100%;
+  }
+}
+
+.report__title {
+  @include medium-heading;
+  font-weight: normal;
+}
+
+.report__meta {
+  @include small-text;
+  color: $darkgray;
 }
