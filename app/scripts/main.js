@@ -12,7 +12,7 @@ import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
 
 const Root = () => (
-  <Provider store={store}>
+  <Provider store={store()}>
     <HashRouter>
       <App>
         <Switch>
