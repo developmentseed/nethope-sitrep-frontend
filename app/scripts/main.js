@@ -25,7 +25,7 @@ class PrivateRoute extends React.Component {
   render () {
     const { component: Component, render: renderComponent, ...rest } = this.props
     let render
-    if (true) {
+    if (this.isAuthenticated()) {
       render = props => renderComponent ? renderComponent(props) : <Component {...props} />
     } else {
       render = props => <Redirect to={{
@@ -43,10 +43,10 @@ const Root = () => (
       <App>
         <Switch>
           <Route path='/login' component={Login} />
-          <Route exact path='/' component={Home} />
-          <Route exact path='/reports' component={Reports} />
-          <Route exact path='/reports/:reportId' component={ReportDetail} />
-          <Route exact path='/reports/:reportId/update' component={ReportDetail} />
+          <PrivateRoute exact path='/' component={Home} />
+          <PrivateRoute exact path='/reports' component={Reports} />
+          <PrivateRoute exact path='/reports/:reportId' component={ReportDetail} />
+          <PrivateRoute exact path='/reports/:reportId/update' component={ReportDetail} />
         </Switch>
       </App>
     </BrowserRouter>
