@@ -78,7 +78,7 @@ class Auth extends React.Component {
       idToken: authResult.idToken,
       expiresAt
     })
-    this.props.history.replace('/')
+    this.props.history.replace(this.props.location.path)
   }
 
   renewSession () {

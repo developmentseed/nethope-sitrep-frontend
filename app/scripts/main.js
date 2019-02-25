@@ -43,10 +43,10 @@ class PrivateRoute extends React.Component {
         render = props => renderComponent ? renderComponent(props) : <Component {...props} />
         break
       case loginStatus.INFLIGHT:
-        render = () => <Loading />
+        render = (props) => <Route path={props.location.path} component={Loading} />
         break
       case loginStatus.NULL:
-        render = () => <Login />
+        render = () => <Route path='/' component={Login} />
     }
 
     return <Route {...rest} render={render} />
