@@ -16,8 +16,12 @@
   margin-top: 1em;
 }
 
-.login__prompt {
-  font-weight: bold;
+.page__loading,
+.page__login {
   margin-top: 20%;
   text-align: center;
+}
+
+.login__prompt {
+  font-weight: bold;
 }

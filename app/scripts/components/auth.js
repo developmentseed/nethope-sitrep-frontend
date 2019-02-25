@@ -46,7 +46,7 @@ class Auth extends React.Component {
     this.auth0.authorize()
   }
 
-  logout(e) {
+  logout (e) {
     e && typeof e.preventDefault === 'function' && e.preventDefault()
     this.props.clearCredentials()
 
@@ -56,18 +56,18 @@ class Auth extends React.Component {
     this.props.history.replace('/')
   }
 
-  handleAuthentication() {
+  handleAuthentication () {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {
         this.props.history.replace('/')
-        console.log(err)
+        console.error(err) // eslint-disable-line no-console
       }
     })
   }
 
-  setSession(authResult) {
+  setSession (authResult) {
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true')
 
@@ -81,13 +81,13 @@ class Auth extends React.Component {
     this.props.history.replace('/')
   }
 
-  renewSession() {
+  renewSession () {
     this.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {
         this.logout()
-        console.log(err)
+        console.error(err) // eslint-disable-line no-console
       }
     })
   }
@@ -95,9 +95,9 @@ class Auth extends React.Component {
   render () {
     const { isLoggedIn } = this.props
     const cls = 'nav__link nav__link__login'
-    return isLoggedIn ?
-      <a className={c(cls, 'nav__link__logout')} onClick={this.logout} href='#'>Log out</a> :
-      <a className={c(cls)} onClick={this.login} href='#'>Login</a>
+    return isLoggedIn
+      ? <a className={c(cls, 'nav__link__logout')} onClick={this.logout} href='#'>Log out</a>
+      : <a className={c(cls)} onClick={this.login} href='#'>Login</a>
   }
 }
 

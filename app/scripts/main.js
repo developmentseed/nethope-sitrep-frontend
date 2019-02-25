@@ -2,7 +2,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import getStore from './store'
 
@@ -11,6 +11,7 @@ import Home from './pages/home'
 import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
 import Login from './pages/login'
+import Loading from './pages/loading'
 
 // Optimistically show a logged-in state, even though
 // the actual token may have expired.
@@ -19,22 +20,35 @@ const store = getStore({
   user: { isLoggedIn }
 })
 
+const loginStatus = {
+  LOGGED_IN: 'LOGGED_IN',
+  INFLIGHT: 'INFLIGHT',
+  NULL: 'NULL'
+}
+
 class PrivateRoute extends React.Component {
-  isAuthenticated () {
-    return !!store.getState().user.isLoggedIn
+  getAuthStatus () {
+    const { user } = store.getState()
+    return user.isLoggedIn && user.accessToken ? loginStatus.LOGGED_IN
+      : user.isLoggedIn ? loginStatus.INFLIGHT // show a loading screen until we're ready to make requests
+        : loginStatus.NULL
   }
 
   render () {
     const { component: Component, render: renderComponent, ...rest } = this.props
     let render
-    if (this.isAuthenticated()) {
-      render = props => renderComponent ? renderComponent(props) : <Component {...props} />
-    } else {
-      render = props => <Redirect to={{
-        pathname: '/login',
-        state: { from: props.location }
-      }} />
+
+    switch (this.getAuthStatus()) {
+      case loginStatus.LOGGED_IN:
+        render = props => renderComponent ? renderComponent(props) : <Component {...props} />
+        break
+      case loginStatus.INFLIGHT:
+        render = () => <Loading />
+        break
+      case loginStatus.NULL:
+        render = () => <Login />
     }
+
     return <Route {...rest} render={render} />
   }
 }
@@ -44,7 +58,6 @@ const Root = () => (
     <BrowserRouter>
       <App>
         <Switch>
-          <Route path='/login' component={Login} />
           <PrivateRoute exact path='/' component={Home} />
           <PrivateRoute exact path='/reports' component={Reports} />
           <PrivateRoute exact path='/reports/:reportId' component={ReportDetail} />
