@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 
-import { readReport, postReport, patchReport } from '../actions'
+import { readReport, postReport, patchReport, clearUploadState } from '../actions'
 
 import Notebook from '../components/notebook'
 import EditableText from '../components/editable-text'
@@ -56,6 +56,10 @@ class UpdateReport extends React.Component {
         lastReport: this.props.report.id
       })
     }
+  }
+
+  componentWillUnmount () {
+    this.props.clearUploadState()
   }
 
   renderUploadNotebookUI () {
@@ -112,6 +116,6 @@ const mapStateToProps = (state) => ({
   nextReport: state.uploadReport.nextReport
 })
 
-const mapDispatch = { ...readReport, postReport, patchReport }
+const mapDispatch = { ...readReport, postReport, patchReport, clearUploadState }
 
 export default withRouter(connect(mapStateToProps, mapDispatch)(UpdateReport))
