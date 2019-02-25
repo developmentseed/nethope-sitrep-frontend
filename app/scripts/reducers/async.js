@@ -18,13 +18,14 @@ const asyncTypes = [
 const SUCCESS = asyncTypes.map(s => s + '_SUCCESS')
 const FAIL = asyncTypes.map(s => s + '_FAIL')
 
-export default function reducer (state = initialState, { type, payload }) {
+export default function reducer (state = initialState, { type, payload, error }) {
+  console.log(type)
   if (asyncTypes.indexOf(type) >= 0) {
     return { ...state, type, loading: true }
   } else if (SUCCESS.indexOf(type) >= 0) {
     return { ...state, type, loading: false, error: null }
   } else if (FAIL.indexOf(type) >= 0) {
-    return { ...state, type, loading: false, error: payload.error }
+    return { ...state, type, loading: false, error: error }
   }
   return state
 }
