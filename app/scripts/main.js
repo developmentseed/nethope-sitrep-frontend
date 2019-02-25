@@ -12,14 +12,16 @@ import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
 import Login from './pages/login'
 
-import Auth from './auth'
-const auth = new Auth()
-
-const store = getStore()
+// Optimistically show a logged-in state, even though
+// the actual token may have expired.
+const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+const store = getStore({
+  user: { isLoggedIn }
+})
 
 class PrivateRoute extends React.Component {
   isAuthenticated () {
-    return !!store.getState().user.token
+    return !!store.getState().user.isLoggedIn
   }
 
   render () {

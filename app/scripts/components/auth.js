@@ -93,18 +93,16 @@ class Auth extends React.Component {
   }
 
   render () {
-    const { accessToken } = this.props
+    const { isLoggedIn } = this.props
     const cls = 'nav__link nav__link__login'
-    return accessToken ?
+    return isLoggedIn ?
       <a className={c(cls, 'nav__link__logout')} onClick={this.logout} href='#'>Log out</a> :
       <a className={c(cls)} onClick={this.login} href='#'>Login</a>
   }
 }
 
 const mapStateToProps = (state) => ({
-  accessToken: state.user.accessToken,
-  idToken: state.user.idToken,
-  expiresAt: state.user.expiresAt
+  isLoggedIn: state.user.isLoggedIn
 })
 
 const mapDispatch = {
