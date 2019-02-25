@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import auth0 from 'auth0-js'
 import c from 'classnames'
+import axios from 'axios'
 
 import { user } from '../actions'
 import { authDomain, authClientID, authRedirectUri } from '../config'
@@ -68,6 +69,9 @@ class Auth extends React.Component {
   }
 
   setSession (authResult) {
+    // Set a default Authorization token
+    axios.defaults.headers.common['Authorization'] = `Bearer ${authResult.idToken}`
+
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true')
 
@@ -78,6 +82,7 @@ class Auth extends React.Component {
       idToken: authResult.idToken,
       expiresAt
     })
+
     this.props.history.replace(this.props.location.path)
   }
 
