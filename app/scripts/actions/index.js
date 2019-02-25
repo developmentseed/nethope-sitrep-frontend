@@ -67,3 +67,8 @@ export const readReport = {
 }
 
 export const clearUploadState = actionCreator(types.CLEAR_UPLOAD_REPORT_STATE)
+
+export const user = {
+  setCredentials: actionCreator(types.SET_USER_CREDENTIALS, 'accessToken', 'idToken', 'expiresAt'),
+  clearCredentials: actionCreator(types.CLEAR_USER_CREDENTIALS)
+}
