@@ -55,6 +55,7 @@
     "babelify": "^8.0.0",
     "browser-sync": "^2.24.4",
     "browserify": "^16.2.2",
+    "connect-history-api-fallback": "^1.6.0",
     "del": "^3.0.0",
     "envify": "^4.1.0",
     "eslint": "^5.4.0",
@@ -92,8 +93,10 @@
   "dependencies": {
     "ansi_up": "^4.0.3",
     "assert": "^1.4.1",
+    "auth0-js": "^9.10.0",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
+    "history": "^4.7.2",
     "js-file-download": "^0.4.4",
     "lodash.defaultsdeep": "^4.6.0",
     "lodash.groupby": "^4.6.0",

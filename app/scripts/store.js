@@ -14,7 +14,9 @@ if (environment !== 'production') {
 const composeEnhancers = environment !== 'production'
   ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : compose
 
-const initialState = {}
-const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middlewares)))
+function getStore (initialState = {}) {
+  const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(...middlewares)))
+  return store
+}
 
-export default store
+export default getStore

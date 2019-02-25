@@ -12,6 +12,7 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const sourcemaps = require('gulp-sourcemaps');
 const log = require('fancy-log');
+const historyApiFallback = require('connect-history-api-fallback');
 const SassString = require('node-sass').types.String;
 const notifier = require('node-notifier');
 const runSequence = require('run-sequence');
@@ -61,7 +62,10 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles'], function () {
       baseDir: ['.tmp', 'app'],
       routes: {
         '/node_modules': './node_modules'
-      }
+      },
+      middleware: [
+        historyApiFallback()
+      ]
     }
   });
 

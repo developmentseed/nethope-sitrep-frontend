@@ -47,11 +47,13 @@ $dark-border: 1px solid rgba(27, 31, 35, .3);
 
 @mixin button {
   -moz-appearance: none;
+  -webkit-appearance: none;
   appearance: none;
+
   -moz-user-select: none;
   -ms-user-select: none;
-  -webkit-appearance: none;
   -webkit-user-select: none;
+  user-select: none;
 
   color: $black;
   background-color: $lightgray;
@@ -67,7 +69,6 @@ $dark-border: 1px solid rgba(27, 31, 35, .3);
   display: inline-block;
 
   transition: color .2s ease-in-out;
-  user-select: none;
   &:hover {
     color: $blue;
     background-position: -.5em;

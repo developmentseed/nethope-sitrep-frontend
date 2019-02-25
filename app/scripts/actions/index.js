@@ -3,13 +3,11 @@ import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
-import { api, authToken } from '../config'
+import { api } from '../config'
 
-if (!authToken) {
-  console.warn('No auth token found in local config. API requests will fail.') // eslint-disable-line no-console
-} else {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`
-}
+// These requests will all fail without a bearer token.
+// They rely on the auth component setting a default Authorization header.
+// Check app/assets/scripts/components/auth.js
 
 // Note, For "detail" queries, ie a single report, we include
 // a special header so the API returns the data as an object,
@@ -67,3 +65,8 @@ export const readReport = {
 }
 
 export const clearUploadState = actionCreator(types.CLEAR_UPLOAD_REPORT_STATE)
+
+export const user = {
+  setCredentials: actionCreator(types.SET_USER_CREDENTIALS, 'accessToken', 'idToken', 'expiresAt'),
+  clearCredentials: actionCreator(types.CLEAR_USER_CREDENTIALS)
+}
