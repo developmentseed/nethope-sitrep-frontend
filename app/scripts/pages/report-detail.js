@@ -109,7 +109,7 @@ class ReportDetail extends React.Component {
 
 const mapStateToProps = (state, props) => {
   const { reports, reportMap } = state
-  const reportID = props.match.params.reportID
+  const { reportID } = props.match.params
   // Check reports list and the report map
   // to see if we already fetched this.
   const report = reportMap[reportID] || reports.find(d => d.id === reportID)
