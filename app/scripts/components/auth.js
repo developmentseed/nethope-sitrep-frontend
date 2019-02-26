@@ -31,13 +31,13 @@ class Auth extends React.Component {
     if (localStorage.getItem('isLoggedIn') === 'true') {
       this.renewSession()
     }
-    if (/access_token|id_token|error/.test(this.props.location.hash)) {
+    if (/access_token|id_token|error/.test(this.props.location.pathname)) {
       this.handleAuthentication()
     }
   }
 
   componentDidUpdate () {
-    if (/access_token|id_token|error/.test(this.props.location.hash)) {
+    if (/access_token|id_token|error/.test(this.props.location.pathname)) {
       this.handleAuthentication()
     }
   }
