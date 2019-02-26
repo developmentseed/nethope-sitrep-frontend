@@ -1,5 +1,5 @@
 # https://github.com/developmentseed/how/issues/149
-# ssh-keygen -t rsa -b 4096 -C ORG/REPO -f deploy_key
+# ssh-keygen -m PEM -t rsa -b 4096 -C developmentseed/nethope-sitrep-frontend -f deploy_key
 version: 2
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     environment:
       - STAGING_BRANCH: develop
       - PRODUCTION_BRANCH: master
-      - GH_REF: git@github.com:developmentseed/project-seed.git
+      - GH_REF: git@github.com:developmentseed/nethope-sitrep-frontend.git
       - GH_NAME: "Development Seed"
       - GH_EMAIL: "dev@developmentseed.org"
 
@@ -32,11 +32,11 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn test
+      - run: yarn lint
 
       - add_ssh_keys:
           fingerprints:
-            - ""
+            - "SHA256:XhiaHE6muoWMmm//SZ4GgoDJTvDTFGEMy3RJSAXrEbo developmentseed/nethope-sitrep-frontend"
 
       - run:
           name: Building site
@@ -51,7 +51,7 @@ jobs:
           name: Deploy to GH Pages
           command: |
             if [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
-              cd build
+              cd dist
               git init
               git config user.name "$GH_NAME"
               git config user.email "$GH_EMAIL"

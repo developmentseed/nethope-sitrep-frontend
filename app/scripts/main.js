@@ -2,7 +2,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import getStore from './store'
 
@@ -55,16 +55,17 @@ class PrivateRoute extends React.Component {
 
 const Root = () => (
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <App>
         <Switch>
           <PrivateRoute exact path='/' component={Home} />
           <PrivateRoute exact path='/reports' component={Reports} />
           <PrivateRoute exact path='/reports/:reportId' component={ReportDetail} />
           <PrivateRoute exact path='/reports/:reportId/update' component={ReportDetail} />
+          <PrivateRoute exact path='/emergencies' component={Home} />
         </Switch>
       </App>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>
 )
 
