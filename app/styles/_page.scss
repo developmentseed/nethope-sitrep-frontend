@@ -1,0 +1,27 @@
+.inner {
+  @include row;
+  padding: 0 1em;
+}
+
+.page__header {
+  background: $lightgray;
+  padding: 2em 0 1.75em;
+}
+
+.page__title {
+  font-size: 2em;
+}
+
+.section {
+  margin-top: 1em;
+}
+
+.page__loading,
+.page__login {
+  margin-top: 20%;
+  text-align: center;
+}
+
+.login__prompt {
+  font-weight: bold;
+}
