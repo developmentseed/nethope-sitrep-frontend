@@ -58,8 +58,8 @@ export const getCountries = asyncActionCreator(
 )
 
 export const getEmergencies = asyncActionCreator(
-  types.GET_EMERGENCIES,
-  () => axios.get(url.resolve(goApi, 'event/'))
+  types.GET_EMERGENCIES, 'qs',
+  (config) => axios.get(url.resolve(goApi, 'event/' + (config && `?${config.qs}`)))
 )
 
 export const forms = {
