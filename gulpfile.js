@@ -37,7 +37,9 @@ if (!process.env.DS_ENV) {
   }
 }
 
-var prodBuild = false;
+var prodBuild = process.env.DS_ENV === 'production';
+
+var prodUrl = 'http://devseed.com/nethope-sitrep-frontend/'
 
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
@@ -209,7 +211,7 @@ gulp.task('html', function () {
 
     .pipe($.if('*.css', $.csso()))
     .pipe($.if(/\.(css|js)$/, $.rev()))
-    .pipe($.revRewrite())
+    .pipe($.revRewrite(prodBuild ? { prefix: prodUrl } : null))
     .pipe(gulp.dest('dist'));
 });
 
