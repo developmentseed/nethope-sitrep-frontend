@@ -1,0 +1,35 @@
+.em__title {
+  @include medium-heading;
+}
+
+.table {
+  @include small-text;
+  margin: 1em 0;
+  table-layout: auto;
+  width: 100%;
+
+  th, td {
+    padding: 1em 1em;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  td:last-child,
+  th:last-child {
+    text-align: right;
+  }
+}
+
+.table__head {
+  th {
+    border-bottom: 1px solid $darkgray;
+  }
+}
+
+.table__body {
+  tr:nth-of-type(even) {
+    background-color: $lightgray;
+  }
+}
