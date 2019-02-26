@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import getStore from './store'
+import { getCountries } from './actions'
 
 import App from './components/app'
 import Home from './pages/home'
@@ -25,6 +26,9 @@ const loginStatus = {
   INFLIGHT: 'INFLIGHT',
   NULL: 'NULL'
 }
+
+// Dispatch initial requests
+store.dispatch(getCountries())
 
 class PrivateRoute extends React.Component {
   getAuthStatus () {
