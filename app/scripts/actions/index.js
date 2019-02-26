@@ -53,8 +53,8 @@ export const postReport = asyncActionCreator(
 )
 
 export const getCountries = asyncActionCreator(
-  types.GET_COUNTRIES, 'countries',
-  ({ countries }) => axios.get(url.resolve(goApi, 'country/?limit=300')) // there are about 279 total countries here
+  types.GET_COUNTRIES,
+  () => axios.get(url.resolve(goApi, 'country/?limit=300')) // there are about 279 total countries here
 )
 
 export const getEmergencies = asyncActionCreator(
