@@ -39,7 +39,7 @@ if (!process.env.DS_ENV) {
 
 var prodBuild = process.env.DS_ENV === 'production';
 
-var prodUrl = 'http://devseed.com/nethope-sitrep-frontend/'
+var prodUrl = 'https://devseed.com/nethope-sitrep-frontend/'
 
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
