@@ -26,7 +26,7 @@ class Country extends React.Component {
   render () {
     const { country, emergencies, reports } = this.props
     return (
-      <div className='page page__home'>
+      <div className='page page__country'>
         { country && (
           <div className='page__header'>
             <div className='inner'>

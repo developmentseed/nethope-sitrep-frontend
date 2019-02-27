@@ -12,6 +12,7 @@ import Home from './pages/home'
 import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
 import Country from './pages/country'
+import Emergencies from './pages/emergencies'
 import Login from './pages/login'
 import Loading from './pages/loading'
 
@@ -67,7 +68,7 @@ const Root = () => (
           <PrivateRoute exact path='/reports' component={Reports} />
           <PrivateRoute exact path='/reports/:reportID' component={ReportDetail} />
           <PrivateRoute exact path='/reports/:reportID/update' component={ReportDetail} />
-          <PrivateRoute exact path='/emergencies' component={Home} />
+          <PrivateRoute exact path='/emergencies' component={Emergencies} />
           <PrivateRoute exact path='/emergencies/country/:countryID' component={Country} />
         </Switch>
       </App>
