@@ -32,4 +32,13 @@
   td {
     vertical-align: middle;
   }
+
+}
+
+.table__extlink {
+  color: $darkgray;
+  transition: color .2s linear;
+  &:hover {
+    color: $blue;
+  }
 }
