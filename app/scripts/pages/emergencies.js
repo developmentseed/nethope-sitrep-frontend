@@ -37,7 +37,7 @@ class Emergencies extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            { emergencies && <EmergencyList data={emergencies.data} /> }
+            { emergencies && <EmergencyList data={emergencies.data} showCountry={true} /> }
           </div>
         </div>
       </div>

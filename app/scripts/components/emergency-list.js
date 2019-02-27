@@ -1,5 +1,6 @@
 'use strict'
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
 
@@ -8,7 +9,7 @@ function linkToGO (id) {
 }
 
 const nope = '--'
-function EmergencyList ({ data }) {
+function EmergencyList ({ data, showCountry }) {
   return (
     <div className='em__list'>
       <h3 className='section__title'>Recent Emergencies (last 30 days)</h3>
@@ -18,6 +19,7 @@ function EmergencyList ({ data }) {
             <th>Name</th>
             <th>Type</th>
             <th>Num. Impacted</th>
+            {showCountry && <th>Countries</th>}
             <th>Created</th>
           </tr>
         </thead>
@@ -29,6 +31,9 @@ function EmergencyList ({ data }) {
               </td>
               <td>{get(d, 'dtype.name', nope)}</td>
               <td>{get(d, 'num_affected')}</td>
+              {showCountry && (
+                <td>{(d.countries || []).map(c => <Link key={c.id} to={`/emergencies/country/${c.id}`}>{c.name}</Link>)}</td>
+              )}
               <td>{ago(d['created_at'])}</td>
             </tr>
           )) }
