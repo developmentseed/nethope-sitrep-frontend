@@ -5,11 +5,14 @@ import { Provider } from 'react-redux'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import getStore from './store'
+import { getCountries } from './actions'
 
 import App from './components/app'
 import Home from './pages/home'
 import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
+import Country from './pages/country'
+import Emergencies from './pages/emergencies'
 import Login from './pages/login'
 import Loading from './pages/loading'
 
@@ -25,6 +28,9 @@ const loginStatus = {
   INFLIGHT: 'INFLIGHT',
   NULL: 'NULL'
 }
+
+// Dispatch initial requests
+store.dispatch(getCountries())
 
 class PrivateRoute extends React.Component {
   getAuthStatus () {
@@ -60,9 +66,10 @@ const Root = () => (
         <Switch>
           <PrivateRoute exact path='/' component={Home} />
           <PrivateRoute exact path='/reports' component={Reports} />
-          <PrivateRoute exact path='/reports/:reportId' component={ReportDetail} />
-          <PrivateRoute exact path='/reports/:reportId/update' component={ReportDetail} />
-          <PrivateRoute exact path='/emergencies' component={Home} />
+          <PrivateRoute exact path='/reports/:reportID' component={ReportDetail} />
+          <PrivateRoute exact path='/reports/:reportID/update' component={ReportDetail} />
+          <PrivateRoute exact path='/emergencies' component={Emergencies} />
+          <PrivateRoute exact path='/emergencies/country/:countryID' component={Country} />
         </Switch>
       </App>
     </HashRouter>

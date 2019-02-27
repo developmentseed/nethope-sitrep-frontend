@@ -83,7 +83,7 @@ class Auth extends React.Component {
       expiresAt
     })
 
-    this.props.history.replace(this.props.location.path)
+    this.props.history.replace(this.props.location.pathname)
   }
 
   renewSession () {
