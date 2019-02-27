@@ -21,11 +21,15 @@
 .table__head {
   th {
     border-bottom: 1px solid $darkgray;
+    vertical-align: bottom;
   }
 }
 
 .table__body {
   tr:nth-of-type(even) {
     background-color: $lightgray;
+  }
+  td {
+    vertical-align: middle;
   }
 }
