@@ -3,7 +3,7 @@ import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
-import { api } from '../config'
+import { api, goApi } from '../config'
 
 // These requests will all fail without a bearer token.
 // They rely on the auth component setting a default Authorization header.
@@ -50,6 +50,16 @@ export const postReport = asyncActionCreator(
       Accept: 'application/vnd.pgrst.object+json'
     }
   })
+)
+
+export const getCountries = asyncActionCreator(
+  types.GET_COUNTRIES,
+  () => axios.get(url.resolve(goApi, 'country/?limit=300')) // there are about 279 total countries here
+)
+
+export const getEmergencies = asyncActionCreator(
+  types.GET_EMERGENCIES, 'qs',
+  (config) => axios.get(url.resolve(goApi, 'event/' + (config && `?${config.qs}`)))
 )
 
 export const forms = {

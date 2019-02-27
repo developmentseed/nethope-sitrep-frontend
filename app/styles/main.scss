@@ -22,6 +22,7 @@
 
 @import "bourbon";
 @import "vendor/collecticons";
+@import "vendor/mapbox-gl";
 
 
 /* Reboot
@@ -52,6 +53,8 @@
 @import "modal";
 @import "notifications";
 @import "forms";
+@import "table";
 @import "nav";
 @import "report";
 @import "notebook";
+@import "map";

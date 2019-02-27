@@ -35,3 +35,8 @@ export function getFirstImageOutput (report) {
     }
   }
 }
+
+export function getAuthorFromEmail (email) {
+  let split = email.split('@')
+  return split[0] || 'Author'
+}

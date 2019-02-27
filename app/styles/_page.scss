@@ -13,7 +13,7 @@
 }
 
 .section {
-  margin-top: 1em;
+  margin-top: 2em;
 }
 
 .page__loading,
@@ -24,4 +24,8 @@
 
 .login__prompt {
   font-weight: bold;
+}
+
+.section__title {
+  @include medium-heading;
 }

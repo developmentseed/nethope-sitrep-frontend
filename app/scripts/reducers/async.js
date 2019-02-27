@@ -13,7 +13,9 @@ const asyncTypes = [
   types.GET_REPORT_VERSIONS,
   types.PATCH_REPORT,
   types.READ_REPORT,
-  types.POST_REPORT
+  types.POST_REPORT,
+  types.GET_COUNTRIES,
+  types.GET_EMERGENCIES
 ]
 const SUCCESS = asyncTypes.map(s => s + '_SUCCESS')
 const FAIL = asyncTypes.map(s => s + '_FAIL')

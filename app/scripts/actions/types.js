@@ -11,6 +11,9 @@ const types = createTypes([
   ...async('READ_REPORT'),
   ...async('POST_REPORT'),
 
+  ...async('GET_COUNTRIES'),
+  ...async('GET_EMERGENCIES'),
+
   'SET_USER_CREDENTIALS',
   'CLEAR_USER_CREDENTIALS',
 

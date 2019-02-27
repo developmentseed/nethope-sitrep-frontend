@@ -35,7 +35,7 @@ class ReportDetail extends React.Component {
   componentDidUpdate (prevProps) {
     // Router navigated to new report.
     const id = this.id()
-    if (id !== prevProps.match.params.reportId && !this.props.report) {
+    if (id !== prevProps.match.params.reportID && !this.props.report) {
       this.props.getReport({ id })
     }
 
@@ -50,7 +50,7 @@ class ReportDetail extends React.Component {
   }
 
   id (...args) {
-    const id = this.props.match.params.reportId
+    const id = this.props.match.params.reportID
     if (!args.length) {
       return id
     }
@@ -109,10 +109,10 @@ class ReportDetail extends React.Component {
 
 const mapStateToProps = (state, props) => {
   const { reports, reportMap } = state
-  const reportId = props.match.params.reportId
+  const { reportID } = props.match.params
   // Check reports list and the report map
   // to see if we already fetched this.
-  const report = reportMap[reportId] || reports.find(d => d.id === reportId)
+  const report = reportMap[reportID] || reports.find(d => d.id === reportID)
   return {
     report,
     nextReportID: state.uploadReport.nextReportID
