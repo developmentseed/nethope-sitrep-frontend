@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { stringify } from 'qs'
 
+import { recent } from '../utils/timespans'
 import { getReports, getEmergencies } from '../actions'
 
 import AsyncStatus from '../components/async-status'
@@ -60,7 +61,12 @@ const mapStateToProps = (state, props) => {
 
   // Query string to resolve this country from the GO api.
   // Also the storage key for queried emergencies in this country.
-  const qs = stringify({ countries__in: countryID })
+  const qs = stringify({
+    disaster_start_date__gt: recent,
+    ordering: '-disaster_start_date',
+    countries__in: countryID,
+    limit: 100
+  })
   const emergencies = state.emergencies[qs]
 
   // Reports matching this emergency
