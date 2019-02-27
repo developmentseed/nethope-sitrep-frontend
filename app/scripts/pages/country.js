@@ -3,9 +3,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { stringify } from 'qs'
 
-import { getEmergencies } from '../actions'
+import { getReports, getEmergencies } from '../actions'
 
 import AsyncStatus from '../components/async-status'
+import Report from '../components/report'
 import EmergencyList from '../components/emergency-list'
 
 class Country extends React.Component {
@@ -13,6 +14,7 @@ class Country extends React.Component {
     if (!this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
+    this.props.getReports()
   }
 
   componentDidUpdate (prevProps) {
@@ -22,7 +24,7 @@ class Country extends React.Component {
   }
 
   render () {
-    const { country, emergencies } = this.props
+    const { country, emergencies, reports } = this.props
     return (
       <div className='page page__home'>
         { country && (
@@ -35,6 +37,13 @@ class Country extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
+            <div className='reports__cont'>
+              {reports.map(report => <Report key={report.id} report={report} />)}
+            </div>
+          </div>
+        </div>
+        <div className='section'>
+          <div className='inner'>
             { emergencies && <EmergencyList data={emergencies.data} /> }
           </div>
         </div>
@@ -53,13 +62,18 @@ const mapStateToProps = (state, props) => {
   // Also the storage key for queried emergencies in this country.
   const qs = stringify({ countries__in: countryID })
   const emergencies = state.emergencies[qs]
+
+  // Reports matching this emergency
+  const reports = state.reports.filter(d => d.country.toString() === countryID)
+
   return {
     country,
     qs,
-    emergencies
+    emergencies,
+    reports
   }
 }
 
-const mapDispatch = { getEmergencies }
+const mapDispatch = { getReports, getEmergencies }
 
 export default connect(mapStateToProps, mapDispatch)(Country)

@@ -7,7 +7,7 @@ const nope = '--'
 function EmergencyList ({ data }) {
   return (
     <div className='em__list'>
-      <h3 className='em__title'>Emergencies</h3>
+      <h3 className='section__title'>Emergencies</h3>
       <table className='table'>
         <thead className='table__head'>
           <tr>
