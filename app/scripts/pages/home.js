@@ -1,4 +1,6 @@
+'use strict'
 import React from 'react'
+import { Link } from 'react-router-dom'
 class Home extends React.Component {
   render () {
     return (
@@ -10,6 +12,8 @@ class Home extends React.Component {
         </div>
         <div className='section'>
           <div className='inner'>
+            <h3 className='section__title'><Link to='/reports'>Reports</Link></h3>
+            <h3 className='section__title'><Link to='/emergencies'>Emergencies</Link></h3>
           </div>
         </div>
       </div>
