@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 
 class AsyncState extends React.Component {
   renderLoading () {
-    return <span className='async__status async__loading collecticons collecticons-arrow-spin-ccw' />
+    return <span className='status async__loading collecticons collecticons-arrow-spin-ccw' />
   }
 
   renderError (e) {
-    return <span className='async__status async__error'><span className='async__error__icon collecticons-circle-exclamation' /> {e.message}</span>
+    return <span className='status error'><span className='error__icon collecticons-circle-exclamation' /> {e.message}</span>
   }
 
   render () {
