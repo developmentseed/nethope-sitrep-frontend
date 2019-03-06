@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
+import { get } from 'object-path'
 
 import { getReport, clearUploadState } from '../actions'
 
@@ -57,18 +58,39 @@ class ReportDetail extends React.Component {
     return [id].concat(args).join('-')
   }
 
+  renderUpdateReport () {
+    const { report, isReportOwner } = this.props
+    return (
+      <React.Fragment>
+        <div className='report__ctrls'>
+          <Link className='report__ctrl report__ctrl--small' to={`/reports/${this.id()}`}>
+            <span className='collecticons collecticons-arrow-return' />
+            Go back
+          </Link>
+        </div>
+
+        { isReportOwner ? <UpdateReport report={report} /> : (
+          <div className='report__meta'>
+            <p className='status error'><span className='error__icon collecticons-circle-exclamation' /> Oops, you can only edit reports you own. Fork this report so you can edit it.</p>
+          </div>
+        ) }
+      </React.Fragment>
+    )
+  }
+
   renderReport () {
-    const { report } = this.props
+    const { report, isReportOwner } = this.props
     return (
       <React.Fragment>
         <div className='report__ctrls'>
           <button className='report__ctrl report__ctrl__dl' onClick={this.download}>
             <span className='collecticons collecticons-download' /> Download report
           </button>
-          <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
-            <span className='collecticons collecticons-wrench' />Update this report
-          </Link>
-          <ForkReport current={report.id} />
+          { isReportOwner ? (
+            <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
+              <span className='collecticons collecticons-wrench' />Update this report
+            </Link>
+          ) : <ForkReport current={report.id} /> }
         </div>
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
@@ -87,7 +109,7 @@ class ReportDetail extends React.Component {
   render () {
     const { report, match } = this.props
     if (!report) return null
-    const canEdit = /update/.test(match.path)
+    const showUpdateUI = /update/.test(match.path)
     return (
       <div className='page page__report'>
         <div className='page__header'>
@@ -99,7 +121,7 @@ class ReportDetail extends React.Component {
           <div className='inner'>
             <AsyncStatus />
             {this.props.nextReportID && this.renderUploadSuccess() }
-            { canEdit ? <UpdateReport report={report} /> : this.renderReport() }
+            { showUpdateUI ? this.renderUpdateReport() : this.renderReport() }
           </div>
         </div>
       </div>
@@ -113,9 +135,11 @@ const mapStateToProps = (state, props) => {
   // Check reports list and the report map
   // to see if we already fetched this.
   const report = reportMap[reportID] || reports.find(d => d.id === reportID)
+  const author = get(report, 'author')
   return {
     report,
-    nextReportID: state.uploadReport.nextReportID
+    nextReportID: state.uploadReport.nextReportID,
+    isReportOwner: author && author === state.user.email
   }
 }
 
