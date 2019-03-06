@@ -2,7 +2,6 @@
 import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
-import { get } from 'object-path'
 import types from './types'
 import { api, goApi } from '../config'
 

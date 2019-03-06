@@ -3,7 +3,6 @@ import React from 'react'
 import { get } from 'object-path'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { Link } from 'react-router-dom'
 
 import { readReport, postReport, patchReport, clearUploadState } from '../actions'
 
@@ -77,13 +76,7 @@ class UpdateReport extends React.Component {
   render () {
     const { report } = this.props
     return (
-      <div>
-        <div className='report__ctrls'>
-          <Link className='report__ctrl report__ctrl--small' to={`/reports/${report.id}`}>
-            <span className='collecticons collecticons-arrow-return' />
-            Go back
-          </Link>
-        </div>
+      <React.Fragment>
         <div className='report__meta'>
           <h3 className='report__meta__title'>Edit report metadata</h3>
           <EditableText
@@ -107,7 +100,7 @@ class UpdateReport extends React.Component {
           </form>
           {this.props.nextReport && this.renderUploadNotebookUI()}
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
