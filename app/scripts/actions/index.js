@@ -2,6 +2,7 @@
 import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
+import { get } from 'object-path'
 import types from './types'
 import { api, goApi } from '../config'
 
@@ -44,12 +45,16 @@ export const patchReport = asyncActionCreator(
 
 export const postReport = asyncActionCreator(
   types.POST_REPORT, 'payload', 'lastReport',
-  ({ payload }) => axios.post(url.resolve(api, 'reports'), payload, {
-    headers: {
-      Prefer: 'return=representation',
-      Accept: 'application/vnd.pgrst.object+json'
-    }
-  })
+  ({ payload }, _, getState) => {
+    let _payload = Object.assign({}, payload)
+    delete _payload.author
+    return axios.post(url.resolve(api, 'reports'), _payload, {
+      headers: {
+        Prefer: 'return=representation',
+        Accept: 'application/vnd.pgrst.object+json'
+      }
+    })
+  }
 )
 
 export const getCountries = asyncActionCreator(
