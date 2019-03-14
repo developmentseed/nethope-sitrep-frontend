@@ -113,3 +113,7 @@ tmp
 .tmp
 dist
 *.swp
+
+# Don't commit JSON outputs of static files to repo,
+# to reduce confusion for GUI editors
+app/static/**/*.json
