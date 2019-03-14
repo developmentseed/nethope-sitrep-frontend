@@ -76,6 +76,7 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles'], function () {
   // watch for changes
   gulp.watch([
     'app/*.html',
+    'app/static/**/*.json',
     'app/graphics/**/*'
   ]).on('change', reload);
 
@@ -231,6 +232,7 @@ gulp.task('images', function () {
 gulp.task('extras', function () {
   return gulp.src([
     'app/**/*',
+    '!app/static/**/*.yml',
     '!app/*.html',
     '!app/graphics/**',
     '!app/vendor/**',
