@@ -8,6 +8,7 @@ import uploadReport from './upload-report'
 import user from './user'
 import countries from './countries'
 import emergencies from './emergencies'
+import featured from './featured-emergencies'
 
 export default combineReducers({
   reports,
@@ -17,5 +18,6 @@ export default combineReducers({
   uploadReport,
   user,
   countries,
-  emergencies
+  emergencies,
+  featured
 })
