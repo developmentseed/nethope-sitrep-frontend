@@ -18,7 +18,7 @@ class Emergencies extends React.Component {
     this.props.getReports()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate () {
     if (!this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
@@ -37,7 +37,7 @@ class Emergencies extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            { emergencies && <EmergencyList data={emergencies.data} showCountry={true} /> }
+            { emergencies && <EmergencyList data={emergencies.data} title='Recent Emergencies (last 30 days)' showCountry={true} /> }
           </div>
         </div>
       </div>

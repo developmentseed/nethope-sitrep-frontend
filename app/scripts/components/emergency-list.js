@@ -9,10 +9,10 @@ function linkToGO (id) {
 }
 
 const nope = '--'
-function EmergencyList ({ data, showCountry }) {
+function EmergencyList ({ data, showCountry, title }) {
   return (
     <div className='em__list'>
-      <h3 className='section__title'>Recent Emergencies (last 30 days)</h3>
+      <h3 className='section__title'>{ title }</h3>
       <table className='table'>
         <thead className='table__head'>
           <tr>

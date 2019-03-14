@@ -45,7 +45,7 @@ class Country extends React.Component {
         </div>
         <div className='section'>
           <div className='inner'>
-            { emergencies && <EmergencyList data={emergencies.data} /> }
+            { emergencies && <EmergencyList data={emergencies.data} title='Recent Emergencies (last 30 days)' /> }
           </div>
         </div>
       </div>
