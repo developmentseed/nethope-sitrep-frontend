@@ -14,6 +14,7 @@ const types = createTypes([
   ...async('GET_COUNTRIES'),
   ...async('GET_EMERGENCIES'),
 
+  ...async('GET_STATIC_API'),
   'SET_USER_CREDENTIALS',
   'CLEAR_USER_CREDENTIALS',
 

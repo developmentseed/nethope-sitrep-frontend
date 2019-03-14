@@ -1,9 +1,10 @@
 'use strict'
 import url from 'url'
+import path from 'path'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
-import { api, goApi } from '../config'
+import { api, goApi, siteRoot } from '../config'
 
 // These requests will all fail without a bearer token.
 // They rely on the auth component setting a default Authorization header.
@@ -64,6 +65,11 @@ export const getCountries = asyncActionCreator(
 export const getEmergencies = asyncActionCreator(
   types.GET_EMERGENCIES, 'qs',
   (config) => axios.get(url.resolve(goApi, 'event/' + (config && `?${config.qs}`)))
+)
+
+export const getStaticApi = asyncActionCreator(
+  types.GET_STATIC_API, 'resource',
+  ({ resource }) => axios.get(url.resolve(siteRoot, path.join('static', resource)))
 )
 
 export const forms = {
