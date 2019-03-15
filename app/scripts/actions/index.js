@@ -67,9 +67,9 @@ export const getEmergencies = asyncActionCreator(
   (config) => axios.get(url.resolve(goApi, 'event/' + (config && `?${config.qs}`)))
 )
 
-export const getStaticApi = asyncActionCreator(
-  types.GET_STATIC_API, 'resource',
-  ({ resource }) => axios.get(url.resolve(siteRoot, path.join('static', resource)))
+export const getFeaturedEmergencies = asyncActionCreator(
+  types.GET_FEATURED_EMERGENCIES,
+  () => axios.get(url.resolve(siteRoot, 'static/featured-emergencies.json'))
 )
 
 export const forms = {
