@@ -1,6 +1,5 @@
 'use strict'
 import url from 'url'
-import path from 'path'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
@@ -70,6 +69,11 @@ export const getEmergencies = asyncActionCreator(
 export const getFeaturedEmergencies = asyncActionCreator(
   types.GET_FEATURED_EMERGENCIES,
   () => axios.get(url.resolve(siteRoot, 'static/featured-emergencies.json'))
+)
+
+export const getStaticCountryAssets = asyncActionCreator(
+  types.GET_STATIC_COUNTRY_ASSETS, 'countryID',
+  ({ countryID }) => axios.get(url.resolve(siteRoot, `static/country/${countryID}.json`))
 )
 
 export const forms = {
