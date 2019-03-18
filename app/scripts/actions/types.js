@@ -13,6 +13,7 @@ const types = createTypes([
 
   ...async('GET_COUNTRIES'),
   ...async('GET_EMERGENCIES'),
+  ...async('GET_EMERGENCY'),
 
   ...async('GET_FEATURED_EMERGENCIES'),
   ...async('GET_STATIC_COUNTRY_ASSETS'),
