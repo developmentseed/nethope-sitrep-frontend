@@ -9,6 +9,7 @@ import { getReports, getEmergencies, getStaticCountryAssets } from '../actions'
 import AsyncStatus from '../components/async-status'
 import Report from '../components/report'
 import EmergencyList from '../components/emergency-list'
+import Metadata from '../components/metadata'
 
 class Country extends React.Component {
   componentDidMount () {
@@ -26,24 +27,12 @@ class Country extends React.Component {
     }
   }
 
-  renderMetadataItem (d, i) {
-    const source = d.source && d.link ? <a href={d.link} target='_blank'>{d.source}</a> : d.source
-    return (
-      <React.Fragment key={i}>
-        <dt>{d.label}:</dt>
-        <dd>{d.value} {!!source && <span className='dd__source'>{source}</span>}</dd>
-      </React.Fragment>
-    )
-  }
-
   renderCountryMetadata () {
     const { metadata } = this.props.country
     return (
       <section className='section'>
         <div className='inner'>
-          <dl className='reportcard__dl'>
-            {metadata.map(this.renderMetadataItem)}
-          </dl>
+          <Metadata data={metadata} />
         </div>
       </section>
     )
