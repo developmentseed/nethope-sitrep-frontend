@@ -1,11 +1,13 @@
 'use strict'
+import url from 'url'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
+import { goRoot } from '../config'
 
 function linkToGO (id) {
-  return 'https://go.ifrc.org/emergencies/' + id
+  return url.resolve(goRoot, `emergencies/${id}`)
 }
 
 const nope = '--'
