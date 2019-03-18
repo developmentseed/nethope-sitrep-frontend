@@ -26,7 +26,7 @@ function EmergencyList ({ data, showCountry, title }) {
         <tbody className='table__body'>
           {data.map(d => (
             <tr key={d.id}>
-              <td>{d.name} <a href={linkToGO(d.id)} target='_blank' className='table__extlink'>
+              <td><Link to={`/emergencies/emergency/${d.id}`}>{d.name}</Link> <a href={linkToGO(d.id)} target='_blank' className='table__extlink'>
                 <span className='collecticons collecticons-expand-top-right' /></a>
               </td>
               <td>{get(d, 'dtype.name', nope)}</td>
