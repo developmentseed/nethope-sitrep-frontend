@@ -7,6 +7,7 @@ export default {
 
   api: 'https://nethope-sitrep-api.herokuapp.com',
   goApi: 'https://prddsgocdnapi.azureedge.net/api/v2/',
+  goRoot: 'https://go.ifrc.org/',
 
   siteRoot: '//devseed.com/nethope-sitrep-frontend/',
 

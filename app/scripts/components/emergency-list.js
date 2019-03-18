@@ -1,11 +1,13 @@
 'use strict'
+import url from 'url'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
+import { goRoot } from '../config'
 
 function linkToGO (id) {
-  return 'https://go.ifrc.org/emergencies/' + id
+  return url.resolve(goRoot, `emergencies/${id}`)
 }
 
 const nope = '--'
@@ -26,7 +28,7 @@ function EmergencyList ({ data, showCountry, title }) {
         <tbody className='table__body'>
           {data.map(d => (
             <tr key={d.id}>
-              <td>{d.name} <a href={linkToGO(d.id)} target='_blank' className='table__extlink'>
+              <td><Link to={`/emergencies/emergency/${d.id}`}>{d.name}</Link> <a href={linkToGO(d.id)} target='_blank' className='table__extlink'>
                 <span className='collecticons collecticons-expand-top-right' /></a>
               </td>
               <td>{get(d, 'dtype.name', nope)}</td>

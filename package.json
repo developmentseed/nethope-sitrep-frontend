@@ -17,7 +17,7 @@
   "homepage": "https://github.com/developmentseed/project-seed",
   "scripts": {
     "postinstall": "[ -f app/scripts/config/local.js ] || echo \"'use strict';\n\nexport default {\n  environment: 'development'\n};\" > app/scripts/config/local.js",
-    "static": "yaml2json ./app/static --save",
+    "static": "yaml2json ./app/static --save --recursive",
     "serve": "npm run static && DS_ENV=development gulp serve",
     "build": "npm run static && DS_ENV=production NODE_ENV=production gulp",
     "stage": "npm run static && DS_ENV=staging NODE_ENV=staging gulp",

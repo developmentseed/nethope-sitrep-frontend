@@ -1,6 +1,5 @@
 'use strict'
 import url from 'url'
-import path from 'path'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
 import types from './types'
@@ -67,9 +66,24 @@ export const getEmergencies = asyncActionCreator(
   (config) => axios.get(url.resolve(goApi, 'event/' + (config && `?${config.qs}`)))
 )
 
-export const getStaticApi = asyncActionCreator(
-  types.GET_STATIC_API, 'resource',
-  ({ resource }) => axios.get(url.resolve(siteRoot, path.join('static', resource)))
+export const getFeaturedEmergencies = asyncActionCreator(
+  types.GET_FEATURED_EMERGENCIES,
+  () => axios.get(url.resolve(siteRoot, 'static/featured-emergencies.json'))
+)
+
+export const getEmergency = asyncActionCreator(
+  types.GET_EMERGENCY, 'emergencyID',
+  ({ emergencyID }) => axios.get(url.resolve(goApi, `event/${emergencyID}`))
+)
+
+export const getStaticCountryAssets = asyncActionCreator(
+  types.GET_STATIC_COUNTRY_ASSETS, 'countryID',
+  ({ countryID }) => axios.get(url.resolve(siteRoot, `static/country/${countryID}.json`))
+)
+
+export const getStaticEmergencyAssets = asyncActionCreator(
+  types.GET_STATIC_EMERGENCY_ASSETS, 'emergencyID',
+  ({ emergencyID }) => axios.get(url.resolve(siteRoot, `static/emergency/${emergencyID}.json`))
 )
 
 export const forms = {

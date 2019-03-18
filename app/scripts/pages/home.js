@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { stringify } from 'qs'
 
-import { getStaticApi, getEmergencies } from '../actions'
+import { getFeaturedEmergencies, getEmergencies } from '../actions'
 
 import EmergencyList from '../components/emergency-list'
 import AsyncStatus from '../components/async-status'
 
 class Home extends React.Component {
   componentDidMount () {
-    this.props.getStaticApi({ resource: 'featured-emergencies.json' })
+    this.props.getFeaturedEmergencies()
   }
 
   componentDidUpdate () {
@@ -55,5 +55,5 @@ const mapStateToProps = (state) => {
     emergencies
   }
 }
-const mapDispatch = { getStaticApi, getEmergencies }
+const mapDispatch = { getFeaturedEmergencies, getEmergencies }
 export default connect(mapStateToProps, mapDispatch)(Home)
