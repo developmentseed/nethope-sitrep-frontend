@@ -1,7 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from'react-router-dom'
+import { Link } from 'react-router-dom'
 import { getReports } from '../actions'
 
 import Report from '../components/report'
