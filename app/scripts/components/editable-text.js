@@ -40,7 +40,7 @@ class EditableText extends React.Component {
     const disabled = this.isDisabled()
     return (
       <form className='editable__form' onSubmit={this.onSubmit}>
-        <label className='editable__label' htmlFor={this.props.formID}>{this.props.label}</label>
+        <label className='editable__label' htmlFor={this.props.formID}>{this.props.label} {this.props.showRequired && <span className='error__label'><span className='collecticons collecticons-circle-information' /> this field is required</span>}</label>
         <input className='editable__input'
           type='text'
           id={this.props.formID}
@@ -48,7 +48,9 @@ class EditableText extends React.Component {
           value={this.props.value}
           onChange={this.update}
         />
-        <input type='submit' value='Submit' className={c('editable__submit', { disabled })} />
+        { !this.props.hideSubmit && (
+          <input type='submit' value='Submit' className={c('editable__submit', { disabled })} />
+        ) }
       </form>
     )
   }
