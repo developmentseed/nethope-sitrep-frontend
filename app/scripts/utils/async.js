@@ -18,3 +18,32 @@ export const getForkPayloadFromReport = (report) => {
   })
   return payload
 }
+
+const cells = {
+  heading: (name) => ({
+    cell_type: 'heading',
+    level: 1,
+    metadata: {},
+    source: [ name ]
+  }),
+
+  markdown: (body) => ({
+    cell_type: 'markdown',
+    metadata: {},
+    source: [ body ]
+  })
+}
+
+export const getSimpleNotebookPayload = (name, body) => {
+  const content = {
+    cells: [],
+    metadata: {}
+  }
+  content.cells.push(cells.heading(name))
+  content.cells.push(cells.markdown(body))
+  const payload = {
+    content,
+    name
+  }
+  return payload
+}
