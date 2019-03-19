@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import auth0 from 'auth0-js'
 import c from 'classnames'
 import axios from 'axios'
+import { get } from 'object-path'
 
 import { user } from '../actions'
 import { authDomain, authClientID, authRedirectUri } from '../config'
@@ -82,6 +83,7 @@ class Auth extends React.Component {
     this.props.setCredentials({
       accessToken: authResult.accessToken,
       idToken: authResult.idToken,
+      email: get(authResult, 'idTokenPayload.email'),
       expiresAt
     })
 
