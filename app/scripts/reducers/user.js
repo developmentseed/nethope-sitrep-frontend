@@ -1,5 +1,4 @@
 'use strict'
-import { get } from 'object-path'
 import types from '../actions/types'
 
 const initialState = {
@@ -17,7 +16,7 @@ function reducer (state = initialState, { type, payload }) {
         isLoggedIn: true,
         accessToken: payload.accessToken,
         idToken: payload.idToken,
-        email: get(payload, 'idTokenPayload.email'),
+        email: payload.email,
         expiresAt: payload.expiresAt
       }
     case types.CLEAR_USER_CREDENTIALS:
