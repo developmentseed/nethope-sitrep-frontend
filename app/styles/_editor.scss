@@ -1,14 +1,14 @@
 .section__editor {
   background-color: $lightgray;
   margin-top: 0;
-  padding-top: 2em;
+  padding-top: 1em;
   padding-bottom: 4em;
 }
 
 .editor__cont {
   @include inset-shadow;
   @include code;
-  padding: 2em;
+  padding: 0.5em;
   background: $white;
 }
 

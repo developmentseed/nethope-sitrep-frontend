@@ -111,6 +111,7 @@
   }
 }
 
+.report__ctrl__save,
 .report__ctrl__confirm {
   @include button-confirm;
   font-size: 1em;
