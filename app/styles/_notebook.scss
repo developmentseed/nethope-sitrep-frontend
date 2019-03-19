@@ -31,6 +31,22 @@
   position: relative;
 }
 
+.nb-heading-cell,
+.nb-markdown-cell {
+  font-family: $base-font-family;
+}
+
+.nb-heading-cell {
+  @include medium-heading;
+  margin-top: 1.4em;
+  margin-bottom: 1em;
+}
+
+.nb-markdown-cell {
+  font-size: $base-font-size;
+  line-height: 1.6;
+}
+
 .nb-input, .nb-output {
   margin-top: 1.5em;
 }
