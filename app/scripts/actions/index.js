@@ -104,3 +104,8 @@ export const user = {
   setCredentials: actionCreator(types.SET_USER_CREDENTIALS, 'accessToken', 'idToken', 'expiresAt'),
   clearCredentials: actionCreator(types.CLEAR_USER_CREDENTIALS)
 }
+
+export const createReport = {
+  sync: actionCreator(types.CREATE_REPORT_SYNC, 'value'),
+  clear: actionCreator(types.CREATE_REPORT_CLEAR)
+}

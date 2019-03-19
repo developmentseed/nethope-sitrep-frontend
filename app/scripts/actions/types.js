@@ -23,6 +23,9 @@ const types = createTypes([
 
   'CLEAR_UPLOAD_REPORT_STATE',
 
+  'CREATE_REPORT_SYNC',
+  'CREATE_REPORT_CLEAR',
+
   'CREATE_FORM',
   'UPDATE_FORM',
   'DESTROY_FORM'

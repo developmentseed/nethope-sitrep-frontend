@@ -5,6 +5,7 @@ import reports from './reports'
 import reportMap from './report-map'
 import forms from './forms'
 import uploadReport from './upload-report'
+import newReport from './new-report'
 import user from './user'
 import countries from './countries'
 import emergencies from './emergencies'
@@ -17,6 +18,7 @@ export default combineReducers({
   async,
   forms,
   uploadReport,
+  newReport,
   user,
   countries,
   emergencies,
