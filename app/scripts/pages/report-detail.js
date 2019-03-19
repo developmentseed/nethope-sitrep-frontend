@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 import { get } from 'object-path'
+import { ago } from 'time-ago'
 
 import { getReport } from '../actions'
+import { getAuthorFromEmail } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import Notebook from '../components/notebook'
@@ -70,6 +72,16 @@ class ReportDetail extends React.Component {
     )
   }
 
+  renderReportOwner () {
+    const { report, isReportOwner } = this.props
+    const owner = isReportOwner ? 'You' : getAuthorFromEmail(report.author)
+    return (
+      <div className='report__owner'>
+        <p>{owner} created this report {ago(report['created_at'])}.</p>
+      </div>
+    )
+  }
+
   renderReport () {
     const { report, isReportOwner } = this.props
     return (
@@ -84,6 +96,7 @@ class ReportDetail extends React.Component {
             </Link>
           ) : <ForkReport current={report.id} /> }
         </div>
+        {this.renderReportOwner()}
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
