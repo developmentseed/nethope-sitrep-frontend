@@ -89,6 +89,13 @@
     min-width: 240px;
     text-align: right;
   }
+
+  a {
+    color: $black;
+    &:hover {
+      color: $blue;
+    }
+  }
 }
 
 .report__ctrl {
