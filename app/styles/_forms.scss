@@ -1,3 +1,7 @@
+.editable__cont {
+  margin: 1em 0;
+}
+
 .editable__form {
   @include code;
   display: flex;
@@ -19,10 +23,23 @@
 }
 
 .editable__input {
+  background-color: $white;
   flex-grow: 2;
 }
 
 .editable__submit {
   @include button;
   padding: 0.5em 2em;
+}
+
+.section__editor {
+  .editable__input {
+    @include inset-shadow;
+  }
+}
+
+.error__label {
+  color: $red;
+  font-weight: bold;
+
 }

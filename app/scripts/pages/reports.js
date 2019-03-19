@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { getReports } from '../actions'
 
 import Report from '../components/report'
@@ -23,6 +24,11 @@ class Reports extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
+            <div className='report__ctrls'>
+              <Link className='report__ctrl report__ctrl__new' to='/reports/new' >
+                <span className='collecticons collecticons-page' /> New Report
+              </Link>
+            </div>
             <div className='reports__cont'>
               {reports.map(report => <Report key={report.id} report={report} />)}
             </div>

@@ -42,6 +42,8 @@ export const patchReport = asyncActionCreator(
   })
 )
 
+// Note, we currently don't use the `lastReport` property;
+// however it may be useful at some point to attach fork references.
 export const postReport = asyncActionCreator(
   types.POST_REPORT, 'payload', 'lastReport',
   ({ payload }, _, getState) => {
@@ -101,6 +103,11 @@ export const readReport = {
 export const clearUploadState = actionCreator(types.CLEAR_UPLOAD_REPORT_STATE)
 
 export const user = {
-  setCredentials: actionCreator(types.SET_USER_CREDENTIALS, 'accessToken', 'idToken', 'expiresAt'),
+  setCredentials: actionCreator(types.SET_USER_CREDENTIALS, 'accessToken', 'idToken', 'expiresAt', 'email'),
   clearCredentials: actionCreator(types.CLEAR_USER_CREDENTIALS)
+}
+
+export const createReport = {
+  sync: actionCreator(types.CREATE_REPORT_SYNC, 'value'),
+  clear: actionCreator(types.CREATE_REPORT_CLEAR)
 }

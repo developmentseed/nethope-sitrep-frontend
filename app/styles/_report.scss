@@ -89,6 +89,13 @@
     min-width: 240px;
     text-align: right;
   }
+
+  a {
+    color: $black;
+    &:hover {
+      color: $blue;
+    }
+  }
 }
 
 .report__ctrl {
@@ -104,6 +111,7 @@
   }
 }
 
+.report__ctrl__save,
 .report__ctrl__confirm {
   @include button-confirm;
   font-size: 1em;
@@ -130,4 +138,7 @@
   margin-top: 1em;
 }
 
-
+.report__owner {
+  color: $darkgray;
+  font-style: italic;
+}

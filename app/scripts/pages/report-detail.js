@@ -5,14 +5,17 @@ import { Link } from 'react-router-dom'
 import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 import { get } from 'object-path'
+import { ago } from 'time-ago'
 
-import { getReport, clearUploadState } from '../actions'
+import { getReport } from '../actions'
+import { getAuthorFromEmail } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import Notebook from '../components/notebook'
 import UpdateReport from '../components/update-report'
 import ForkReport from '../components/fork-report'
 import Versions from '../components/versions'
+import UploadReportSuccess from '../components/upload-report-success'
 
 class ReportDetail extends React.Component {
   constructor (props) {
@@ -38,15 +41,6 @@ class ReportDetail extends React.Component {
     const id = this.id()
     if (id !== prevProps.match.params.reportID && !this.props.report) {
       this.props.getReport({ id })
-    }
-
-    // Report upload success: clear upload state and render the new report.
-    const { nextReportID } = this.props
-    if (nextReportID && !prevProps.nextReportID) {
-      setTimeout(() => {
-        this.props.clearUploadState()
-        this.props.history.push(`/reports/${nextReportID}`)
-      }, 800)
     }
   }
 
@@ -78,6 +72,16 @@ class ReportDetail extends React.Component {
     )
   }
 
+  renderReportOwner () {
+    const { report, isReportOwner } = this.props
+    const owner = isReportOwner ? 'You' : getAuthorFromEmail(report.author)
+    return (
+      <div className='report__owner'>
+        <p>{owner} created this report {ago(report['created_at'])}.</p>
+      </div>
+    )
+  }
+
   renderReport () {
     const { report, isReportOwner } = this.props
     return (
@@ -92,17 +96,10 @@ class ReportDetail extends React.Component {
             </Link>
           ) : <ForkReport current={report.id} /> }
         </div>
+        {this.renderReportOwner()}
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
-    )
-  }
-
-  renderUploadSuccess () {
-    return (
-      <div className='success'>
-        <p>Upload successful! Loading new report...</p>
-      </div>
     )
   }
 
@@ -120,7 +117,7 @@ class ReportDetail extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            {this.props.nextReportID && this.renderUploadSuccess() }
+            <UploadReportSuccess />
             { showUpdateUI ? this.renderUpdateReport() : this.renderReport() }
           </div>
         </div>
@@ -138,11 +135,10 @@ const mapStateToProps = (state, props) => {
   const author = get(report, 'author')
   return {
     report,
-    nextReportID: state.uploadReport.nextReportID,
     isReportOwner: author && author === state.user.email
   }
 }
 
-const mapDispatch = { getReport, clearUploadState }
+const mapDispatch = { getReport }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
