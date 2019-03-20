@@ -42,3 +42,12 @@
     color: $blue;
   }
 }
+
+.table__body--select {
+  tr {
+    cursor: pointer;
+    &:hover {
+      background-color: darken($lightgray, 4%);
+    }
+  }
+}

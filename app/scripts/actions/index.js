@@ -1,7 +1,9 @@
 'use strict'
+import Promise from 'promise-polyfill'
 import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
+import { get, set } from 'object-path'
 import types from './types'
 import { api, goApi, siteRoot } from '../config'
 
@@ -20,16 +22,26 @@ export const getReports = asyncActionCreator(
   () => axios.get(url.resolve(api, 'reports'))
 )
 
+const requestReport = (id) => axios.get(url.resolve(api, `reports?id=eq.${id}`), {
+  headers: { Accept: 'application/vnd.pgrst.object+json' }
+})
+
+const requestReportTags = (id) => axios.get(url.resolve(api, `reports?id=eq.${id}&select=id,tags(name)`), {
+  headers: { Accept: 'application/vnd.pgrst.object+json' }
+})
+
 export const getReport = asyncActionCreator(
   types.GET_REPORT, 'id',
-  ({ id }) => axios.get(url.resolve(api, `reports?id=eq.${id}`), {
-    headers: { Accept: 'application/vnd.pgrst.object+json' }
-  })
+  ({ id }) => axios.all([requestReport(id), requestReportTags(id)])
+    .then(axios.spread((report, tags) => {
+      set(report, 'data.tags', get(tags, 'data.tags'), [])
+      return Promise.resolve(report)
+    }))
 )
 
 export const getReportVersions = asyncActionCreator(
   types.GET_REPORT_VERSIONS, 'docID',
-  ({ docID }) => axios.get(url.resolve(api, `reports?doc_id=eq.${docID}`))
+  ({ docID }) => axios.get(url.resolve(api, `reports?doc_id=eq.${docID}&select=id,created_at,doc_id,name`))
 )
 
 export const patchReport = asyncActionCreator(
@@ -45,8 +57,8 @@ export const patchReport = asyncActionCreator(
 // Note, we currently don't use the `lastReport` property;
 // however it may be useful at some point to attach fork references.
 export const postReport = asyncActionCreator(
-  types.POST_REPORT, 'payload', 'lastReport',
-  ({ payload }, _, getState) => {
+  types.POST_REPORT, 'payload', 'lastReport', 'tags',
+  ({ payload, tags }) => {
     let _payload = Object.assign({}, payload)
     delete _payload.author
     return axios.post(url.resolve(api, 'reports'), _payload, {
@@ -54,6 +66,15 @@ export const postReport = asyncActionCreator(
         Prefer: 'return=representation',
         Accept: 'application/vnd.pgrst.object+json'
       }
+    }).then(postPayload => {
+      if (!tags || !tags.length) {
+        return Promise.resolve(postPayload)
+      }
+      const id = postPayload.data.id
+      const _tags = tags.map(d => ({ report_id: id, tag_id: d }))
+      return axios.post(url.resolve(api, 'reports_tags'), _tags)
+        .then(() => Promise.resolve(postPayload))
+        .catch(e => Promise.reject(e))
     })
   }
 )
@@ -86,6 +107,11 @@ export const getStaticCountryAssets = asyncActionCreator(
 export const getStaticEmergencyAssets = asyncActionCreator(
   types.GET_STATIC_EMERGENCY_ASSETS, 'emergencyID',
   ({ emergencyID }) => axios.get(url.resolve(siteRoot, `static/emergency/${emergencyID}.json`))
+)
+
+export const getTags = asyncActionCreator(
+  types.GET_TAGS,
+  () => axios.get(url.resolve(api, 'tags'))
 )
 
 export const forms = {

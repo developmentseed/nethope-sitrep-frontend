@@ -77,9 +77,9 @@ const mapStateToProps = (state, props) => {
   // Get all documents with the same version,
   // then return the IDs of those that are older/newer.
   const { docID, current } = props
-  const { reportMap } = state
+  const { reportMap, reportVersions } = state
   const createdAt = get(reportMap, [current, 'created_at'])
-  const versions = Object.values(reportMap)
+  const versions = Object.values(reportVersions)
     .filter(report => report['doc_id'] === docID)
   return {
     older: versions.filter(d => d['created_at'] < createdAt).sort((a, b) => a['created_at'] > b['created_at'] ? -1 : 1),

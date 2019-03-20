@@ -23,7 +23,7 @@ function Report ({ report, country }) {
       <div className='reportcard__details'>
         <p><span className='reportcard__author'>{getAuthorFromEmail(report.author)}</span> {verb} {ago(report['created_at'])}</p>
         { country && (
-          <dl className='reportcard__dl'>
+          <dl className='dl reportcard__dl'>
             <dt>Country:</dt>
             <dd><Link to={`/emergencies/country/${country.id}`}>{country.name}</Link></dd>
           </dl>

@@ -2,13 +2,20 @@
   margin: 1em 0;
 }
 
+.tags,
+.select__cont,
 .editable__form {
   @include code;
+}
+
+.tags__inline,
+.select__cont,
+.editable__form {
   display: flex;
-  margin-top: 1em;
   flex-wrap: wrap;
 }
 
+.select__label,
 .editable__label {
   @include small-text;
   font-weight: bold;
@@ -16,23 +23,39 @@
   width: 100%;
 }
 
+.select__input,
+.select__trigger,
 .editable__input,
 .editable__submit {
   padding: 0.5em;
   border: $light-border;
 }
 
+.select__input,
 .editable__input {
   background-color: $white;
   flex-grow: 2;
 }
 
+.select__trigger,
 .editable__submit {
   @include button;
   padding: 0.5em 2em;
 }
 
+// Since the entire container is clickable,
+// make it appear so.
+.select__cont:hover {
+  .select__input {
+    cursor: pointer;
+  }
+  .select__trigger {
+    color: $blue;
+  }
+}
+
 .section__editor {
+  .select__input,
   .editable__input {
     @include inset-shadow;
   }
@@ -41,5 +64,27 @@
 .error__label {
   color: $red;
   font-weight: bold;
+}
 
+.select__list__item {
+  display: block;
+  &:hover {
+    background-color: $lightgray;
+  }
+}
+
+.select__cont,
+.reactselect__cont {
+  margin-top: 1em;
+}
+
+.tags__inline {
+  justify-content: space-between;
+}
+
+.reactselect__cont--inline {
+  width: 100%;
+  @include medium-up {
+    width: 49%;
+  }
 }

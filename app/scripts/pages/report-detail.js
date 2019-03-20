@@ -7,7 +7,8 @@ import slugify from 'slugify'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
 
-import { getReport } from '../actions'
+import { nope } from '../utils/format'
+import { getReport, getEmergency } from '../actions'
 import { getAuthorFromEmail } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
@@ -34,6 +35,9 @@ class ReportDetail extends React.Component {
     if (!this.props.report) {
       this.props.getReport({ id: this.id() })
     }
+    if (this.props.report && this.props.report.emergency && !this.props.emergency) {
+      this.props.getEmergency({ emergencyID: this.props.report.emergency })
+    }
   }
 
   componentDidUpdate (prevProps) {
@@ -41,6 +45,9 @@ class ReportDetail extends React.Component {
     const id = this.id()
     if (id !== prevProps.match.params.reportID && !this.props.report) {
       this.props.getReport({ id })
+    }
+    if (this.props.report && this.props.report.emergency && !this.props.emergency) {
+      this.props.getEmergency({ emergencyID: this.props.report.emergency })
     }
   }
 
@@ -82,6 +89,34 @@ class ReportDetail extends React.Component {
     )
   }
 
+  renderReportMeta () {
+    const { report, country, emergency } = this.props
+    const themes = !report.tags || !report.tags.length ? nope : report.tags.map(d => d.name).join(', ')
+    return (
+      <div className='report__tags'>
+        <dl className='dl'>
+          { !!emergency && !!emergency.name && (
+            <React.Fragment>
+              <dt>Emergency:</dt>
+              <dd><Link to={`/emergencies/emergency/${emergency.id}`}>{emergency.name}</Link></dd>
+            </React.Fragment>
+          ) }
+          <dt>Disaster type:</dt>
+          <dd>{report['disaster_type']}</dd>
+
+          <dt>Themes:</dt>
+          <dd>{themes}</dd>
+          { !!country && (
+            <React.Fragment>
+              <dt>Country:</dt>
+              <dd><Link to={`/emergencies/country/${country.id}`}>{country.name}</Link></dd>
+            </React.Fragment>
+          ) }
+        </dl>
+      </div>
+    )
+  }
+
   renderReport () {
     const { report, isReportOwner } = this.props
     return (
@@ -97,6 +132,7 @@ class ReportDetail extends React.Component {
           ) : <ForkReport current={report.id} /> }
         </div>
         {this.renderReportOwner()}
+        {this.renderReportMeta()}
         <Versions docID={report['doc_id']} current={report.id} />
         <Notebook data={report} />
       </React.Fragment>
@@ -111,7 +147,7 @@ class ReportDetail extends React.Component {
       <div className='page page__report'>
         <div className='page__header'>
           <div className='inner'>
-            <h2 className='page__title'>{report.name}</h2>
+            <h2 className='page__title'>{report.report_type && report.report_type + ': '}{report.name}</h2>
           </div>
         </div>
         <div className='section'>
@@ -127,18 +163,20 @@ class ReportDetail extends React.Component {
 }
 
 const mapStateToProps = (state, props) => {
-  const { reports, reportMap } = state
+  const { reportMap } = state
   const { reportID } = props.match.params
-  // Check reports list and the report map
-  // to see if we already fetched this.
-  const report = reportMap[reportID] || reports.find(d => d.id === reportID)
+  const report = reportMap[reportID]
   const author = get(report, 'author')
+  const country = report && report.country && state.countries[report.country]
+  const emergency = report && report.emergency && state.emergencyMap[report.emergency]
   return {
     report,
+    country,
+    emergency,
     isReportOwner: author && author === state.user.email
   }
 }
 
-const mapDispatch = { getReport }
+const mapDispatch = { getReport, getEmergency }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)

@@ -12,7 +12,7 @@ function renderMetadataItem (d, i) {
 
 function Metadata ({ data }) {
   return (
-    <dl className='reportcard__dl'>
+    <dl className='dl reportcard__dl'>
       {data.map(renderMetadataItem)}
     </dl>
   )

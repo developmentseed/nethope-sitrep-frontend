@@ -85,7 +85,7 @@ const mapStateToProps = (state, props) => {
   const emergencies = state.emergencies[qs]
 
   // Reports matching this emergency
-  const reports = state.reports.filter(d => d.country.toString() === countryID)
+  const reports = state.reports.filter(d => d.country && d.country.toString() === countryID)
 
   return {
     country,
