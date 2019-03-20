@@ -11,6 +11,7 @@ import countries from './countries'
 import emergencies from './emergencies'
 import emergencyMap from './emergency-map'
 import featured from './featured-emergencies'
+import tags from './tags'
 
 export default combineReducers({
   reports,
@@ -23,5 +24,6 @@ export default combineReducers({
   countries,
   emergencies,
   emergencyMap,
-  featured
+  featured,
+  tags
 })

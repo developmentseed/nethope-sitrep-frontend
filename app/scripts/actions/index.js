@@ -88,6 +88,11 @@ export const getStaticEmergencyAssets = asyncActionCreator(
   ({ emergencyID }) => axios.get(url.resolve(siteRoot, `static/emergency/${emergencyID}.json`))
 )
 
+export const getTags = asyncActionCreator(
+  types.GET_TAGS,
+  () => axios.get(url.resolve(api, 'tags'))
+)
+
 export const forms = {
   create: actionCreator(types.CREATE_FORM, 'formID', 'initialValue'),
   update: actionCreator(types.UPDATE_FORM, 'formID', 'value'),

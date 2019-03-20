@@ -6,7 +6,7 @@ import { get } from 'object-path'
 
 import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
-import { createReport, postReport, forms, getEmergencies } from '../actions'
+import { createReport, postReport, forms, getEmergencies, getTags } from '../actions'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -22,7 +22,6 @@ import _themes from '../../static/themes.json'
 
 const disasterTypes = _disasterTypes.map(d => ({ label: d.name, value: d.name }))
 const reportTypes = _reportTypes.map(d => ({ label: d.type, value: d.type }))
-const themes = _themes.map(d => ({ label: d.theme, value: d.theme }))
 
 const nameFieldID = 'new-report-name'
 const emergencyFieldID = 'new-report-emergency'
@@ -38,7 +37,8 @@ class NewReport extends React.Component {
     this.state = {
       showNameRequired: false,
       showCountryRequired: false,
-      showReportTypeRequired: false
+      showReportTypeRequired: false,
+      showDisasterTypeRequired: false
     }
 
     this.onEditorChange = (change) => {
@@ -64,18 +64,20 @@ class NewReport extends React.Component {
       const nextState = {
         showNameRequired: !name,
         showCountryRequired: !countryField,
-        showReportTypeRequired: !typeField
+        showReportTypeRequired: !typeField,
+        showDisasterTypeRequired: !disasterField
       }
 
-      if (name && countryField && typeField) {
+      if (name && countryField && typeField && disasterField) {
         const body = Plain.serialize(editorValue)
         const payload = getSimpleNotebookPayload(name, body)
         payload.country = countryField.value
         payload.emergency = get(this.getEmergency(emergencyField), 'id')
+        payload['report_type'] = typeField.value
+        payload['disaster_type'] = disasterField.value
 
-        let tags = []
-
-        // this.props.postReport({ payload })
+        const tags = Array.isArray(themeField) && themeField.map(d => d.value)
+        // this.props.postReport({ payload, tags })
       }
 
       this.setState(nextState)
@@ -99,6 +101,10 @@ class NewReport extends React.Component {
     // We need to query emergencies here to support metadata selection
     if (!this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
+    }
+
+    if (!this.props.themes) {
+      this.props.getTags()
     }
   }
 
@@ -166,14 +172,18 @@ class NewReport extends React.Component {
                 label='Report Type*'
                 options={reportTypes}
                 showRequired={this.state.showReportTypeRequired} />
-              <ReactSelect formID={themeFieldID}
-                className='reactselect__cont--inline'
-                label='Theme'
-                options={themes} />
               <ReactSelect formID={disasterFieldID}
                 className='reactselect__cont--inline'
-                label='Disaster Type'
-                options={disasterTypes} />
+                label='Disaster Type*'
+                options={disasterTypes}
+                showRequired={this.state.showDisasterTypeRequired} />
+            </div>
+
+            <div className='tags'>
+              <ReactSelect formID={themeFieldID}
+                multiselect={true}
+                label='Themes'
+                options={this.props.themes || []} />
             </div>
 
             <div className='report__ctrls'>
@@ -193,6 +203,7 @@ const mapStateToProps = (state) => ({
 
   emergencies: state.emergencies[recentQs],
   qs: recentQs,
+  themes: state.tags.themes,
 
   // form values
   editorValue: state.newReport.value,
@@ -208,6 +219,7 @@ const mapDispatch = {
   ...createReport,
   postReport,
   getEmergencies,
+  getTags,
   update: forms.update
 }
 export default connect(mapStateToProps, mapDispatch)(NewReport)
