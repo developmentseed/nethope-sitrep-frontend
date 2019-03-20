@@ -3,6 +3,7 @@ import Promise from 'promise-polyfill'
 import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
+import { get, set } from 'object-path'
 import types from './types'
 import { api, goApi, siteRoot } from '../config'
 
@@ -21,16 +22,26 @@ export const getReports = asyncActionCreator(
   () => axios.get(url.resolve(api, 'reports'))
 )
 
+const requestReport = (id) => axios.get(url.resolve(api, `reports?id=eq.${id}`), {
+  headers: { Accept: 'application/vnd.pgrst.object+json' }
+})
+
+const requestReportTags = (id) => axios.get(url.resolve(api, `reports?id=eq.${id}&select=id,tags(name)`), {
+  headers: { Accept: 'application/vnd.pgrst.object+json' }
+})
+
 export const getReport = asyncActionCreator(
   types.GET_REPORT, 'id',
-  ({ id }) => axios.get(url.resolve(api, `reports?id=eq.${id}`), {
-    headers: { Accept: 'application/vnd.pgrst.object+json' }
-  })
+  ({ id }) => axios.all([requestReport(id), requestReportTags(id)])
+    .then(axios.spread((report, tags) => {
+      set(report, 'data.tags', get(tags, 'data.tags'), [])
+      return Promise.resolve(report)
+    }))
 )
 
 export const getReportVersions = asyncActionCreator(
   types.GET_REPORT_VERSIONS, 'docID',
-  ({ docID }) => axios.get(url.resolve(api, `reports?doc_id=eq.${docID}`))
+  ({ docID }) => axios.get(url.resolve(api, `reports?doc_id=eq.${docID}&select=id,created_at,doc_id,name`))
 )
 
 export const patchReport = asyncActionCreator(
