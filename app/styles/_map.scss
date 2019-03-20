@@ -1,3 +1,32 @@
 .map__cont {
   background: #1D293F;
 }
+
+.map__legend__item {
+  margin: 0.25em 0 0 2em;
+  align-items: center;
+  display: inline-flex;
+  float: right;
+}
+
+.legend__figure {
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  margin-right: 0.5em;
+
+  > img {
+    width: 100%;
+  }
+}
+
+.legend__figure__circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+.legend__figure__circle--orange {
+  background: #ff8308;
+}

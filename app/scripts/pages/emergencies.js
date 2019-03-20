@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { stringify } from 'qs'
 import _groupBy from 'lodash.groupby'
+import { get } from 'object-path'
 
 import { getReports, getFeaturedEmergencies, getEmergencies } from '../actions'
 import { lastWeek } from '../utils/timespans'
@@ -30,6 +31,8 @@ function geojsonFeatureCollection (features) {
   }
 }
 
+const notebookIconSrc = 'https://raw.githubusercontent.com/developmentseed/nethope-sitrep-frontend/develop/app/graphics/content/icon-notebook.png'
+
 class Emergencies extends React.Component {
   componentDidMount () {
     if (!this.props.featured.length) {
@@ -50,13 +53,13 @@ class Emergencies extends React.Component {
     }
   }
 
-  getMapGeojson () {
+  getMapAssets () {
     const { reports, featuredEmergencies, countries } = this.props
     if (!reports.length || !featuredEmergencies.length) {
-      return null
+      return { sources: null, layers: null }
     }
-    const groups = _groupBy(reports.filter(d => d.country), 'country')
-    const markers = Object.values(groups).map(group => {
+    const reportGroups = _groupBy(reports.filter(d => d.country), 'country')
+    const reportLocations = Object.values(reportGroups).map(group => {
       let country = countries[group[0].country]
       let coordinates = getCentroid(country.iso)
       let properties = {
@@ -66,11 +69,71 @@ class Emergencies extends React.Component {
       return geojsonPoint(coordinates, properties)
     })
 
-    return geojsonFeatureCollection(markers)
+    const emergencyGroups = _groupBy(featuredEmergencies.filter(d => get(d, 'countries.0.iso')), 'countries.0.iso')
+    const emergencyLocations = Object.values(emergencyGroups).map(group => {
+      let coordinates = getCentroid(group[0].countries[0].iso)
+      let properties = {
+        emergencyIDs: group.map(d => d.id).join(','),
+        numEmergencies: group.length
+      }
+      return geojsonPoint(coordinates, properties)
+    })
+
+    const sources = {
+      'notebook-centroids': {
+        type: 'geojson',
+        data: geojsonFeatureCollection(reportLocations)
+      },
+      'emergency-centroids': {
+        type: 'geojson',
+        data: geojsonFeatureCollection(emergencyLocations)
+      }
+    }
+
+    const markerLayer = {
+      dependencies: {
+        image: notebookIconSrc,
+        key: 'notebook'
+      },
+      layer: {
+        id: 'notebook-marker-layer',
+        type: 'symbol',
+        source: 'notebook-centroids',
+        layout: {
+          'icon-image': 'notebook',
+          'icon-size': 0.4,
+          'icon-allow-overlap': true
+        },
+        paint: {
+          'icon-opacity': 0.85
+        }
+      }
+    }
+
+    const circleLayer = {
+      layer: {
+        id: 'emergency-circle-layer',
+        type: 'circle',
+        source: 'emergency-centroids',
+        layout: {
+        },
+        paint: {
+          'circle-radius': 7,
+          'circle-color': '#ff8308',
+          'circle-stroke-color': '#FFFFFF',
+          'circle-stroke-opacity': 0.4,
+          'circle-stroke-width': 1
+        }
+      }
+    }
+
+    const layers = [markerLayer, circleLayer]
+    return { sources, layers }
   }
 
   render () {
     const { emergencies } = this.props
+    const { sources, layers } = this.getMapAssets()
     return (
       <div className='page page__ees'>
         <div className='page__header'>
@@ -78,7 +141,18 @@ class Emergencies extends React.Component {
             <h2 className='page__title'>Active Emergencies</h2>
           </div>
         </div>
-        <Map markers={this.getMapGeojson()} />
+        <Map layers={layers} sources={sources}>
+          <div className='inner map__legend__cont'>
+            <ul className='map__legend'>
+              <li className='map__legend__item'>
+                <span className='legend__figure'><img src={notebookIconSrc} /></span> Recent report
+              </li>
+              <li className='map__legend__item'>
+                <span className='legend__figure legend__figure__circle legend__figure__circle--orange' /> Featured emergency
+              </li>
+            </ul>
+          </div>
+        </Map>
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
@@ -99,7 +173,7 @@ const mapStateToProps = (state, props) => {
 
   const emergencies = state.emergencies[qs]
   const featuredEmergencies = emergencies && Array.isArray(emergencies.data) &&
-    emergencies.data.filter(d => featured.indexOf(d.id) >= 0) || []
+    emergencies.data.filter(d => featured.indexOf(d.id) >= 0)
 
   const timespan = lastWeek.getTime()
   const reports = state.reports.filter(d => d['created_at'] >= timespan)
@@ -109,8 +183,8 @@ const mapStateToProps = (state, props) => {
     featured,
     qs,
     emergencies,
-    featuredEmergencies,
-    reports
+    reports,
+    featuredEmergencies: featuredEmergencies || []
   }
 }
 
