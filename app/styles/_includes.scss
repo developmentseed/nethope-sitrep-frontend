@@ -26,6 +26,11 @@ $dark-border: 1px solid rgba(27, 31, 35, .3);
   line-height: 1.2;
 }
 
+@mixin large-heading {
+  font-size: 2em;
+  line-height: 2.4;
+}
+
 @mixin medium-heading {
   font-size: 1.25em;
   line-height: 2;
@@ -92,6 +97,24 @@ $dark-border: 1px solid rgba(27, 31, 35, .3);
     color: #FFFFFF;
     border: $dark-border;
   }
+}
+
+@mixin code-element {
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
 }
 
 @mixin retina {

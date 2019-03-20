@@ -2,6 +2,7 @@
   margin: 2em 0 4em;
 }
 
+
 .nb-notebook {
   @include code;
   font-family: $code-font-family;
@@ -9,21 +10,7 @@
   color: #000000;
 
   code {
-    direction: ltr;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    word-break: normal;
-    line-height: 1.5;
-
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-
-    -webkit-hyphens: none;
-    -moz-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
+    @include code-element;
   }
 }
 
@@ -45,6 +32,22 @@
 .nb-markdown-cell {
   font-size: $base-font-size;
   line-height: 1.6;
+  img {
+    @include code;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.4em;
+    margin-bottom: 1em;
+    @include medium-heading;
+  }
+
+  code {
+    @include code-element;
+    background-color: $lightgray;
+    font-family: $code-font-family;
+    font-size: $code-font-size;
+  }
 }
 
 .nb-input, .nb-output {
