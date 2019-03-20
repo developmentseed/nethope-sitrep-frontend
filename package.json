@@ -110,6 +110,7 @@
     "marked": "^0.6.0",
     "notebookjs": "^0.4.1",
     "object-path": "^0.11.4",
+    "promise-polyfill": "^8.1.0",
     "qs": "^6.6.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
