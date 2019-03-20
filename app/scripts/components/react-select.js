@@ -25,6 +25,7 @@ class ReactSelect extends React.Component {
         <Select
           options={options}
           onChange={this.onChange}
+          isMulti={this.props.multiselect}
           value={this.props.value} />
       </div>
     )
