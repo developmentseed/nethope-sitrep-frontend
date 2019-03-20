@@ -90,10 +90,15 @@ class NewReport extends React.Component {
               onChange={this.onChange}
               value={this.props.editorValue}/>
 
-            <ReactSelect label='Type' options={reportTypes} />
-            <ReactSelect label='Country' options={countries} />
-            <ReactSelect label='Themes' options={themes} />
-            <ReactSelect label='Disaster Types' options={disasterTypes} />
+            <div className='tags'>
+              <ReactSelect label='Country' options={countries} />
+            </div>
+
+            <div className='tags tags__inline'>
+              <ReactSelect className='reactselect__cont--inline' label='Report Type' options={reportTypes} />
+              <ReactSelect className='reactselect__cont--inline' label='Theme' options={themes} />
+              <ReactSelect className='reactselect__cont--inline' label='Disaster Type' options={disasterTypes} />
+            </div>
 
             <div className='report__ctrls'>
               <button className='report__ctrl report__ctrl__save' onClick={this.save}>Save</button>

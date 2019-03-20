@@ -2,11 +2,16 @@
   margin: 1em 0;
 }
 
+.tags,
 .select__cont,
 .editable__form {
   @include code;
+}
+
+.tags__inline,
+.select__cont,
+.editable__form {
   display: flex;
-  margin-top: 1em;
   flex-wrap: wrap;
 }
 
@@ -68,7 +73,18 @@
   }
 }
 
-.select {
-  @include code;
+.select__cont,
+.reactselect__cont {
   margin-top: 1em;
+}
+
+.tags__inline {
+  justify-content: space-between;
+}
+
+.reactselect__cont--inline {
+  width: 100%;
+  @include medium-up {
+    width: 49%;
+  }
 }
