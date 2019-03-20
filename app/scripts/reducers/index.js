@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 import async from './async'
 import reports from './reports'
 import reportMap from './report-map'
+import reportVersions from './report-versions'
 import forms from './forms'
 import uploadReport from './upload-report'
 import newReport from './new-report'
@@ -16,6 +17,7 @@ import tags from './tags'
 export default combineReducers({
   reports,
   reportMap,
+  reportVersions,
   async,
   forms,
   uploadReport,

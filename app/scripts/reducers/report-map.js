@@ -1,5 +1,4 @@
 'use strict'
-import _keyBy from 'lodash.keyby'
 import types from '../actions/types'
 import { getAsyncResponseData } from '../utils/async'
 
@@ -10,11 +9,6 @@ function reducer (state = initialState, action) {
     case types.PATCH_REPORT_SUCCESS:
     case types.POST_REPORT_SUCCESS:
       return { ...state, [action.payload.id]: setDefaultProps(getAsyncResponseData(action, true)) }
-
-    case types.GET_REPORT_VERSIONS_SUCCESS:
-      let reports = getAsyncResponseData(action).map(setDefaultProps)
-      let next = _keyBy(reports, 'id')
-      return { ...state, ...next }
   }
   return state
 }
