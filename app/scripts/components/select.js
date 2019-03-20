@@ -29,6 +29,9 @@ class Select extends React.Component {
     return (
       <Modal className='modal__lg' cancel={this.toggle}>
         <div className='modal__inner'>
+          <h3 className='modal__prompt'>{this.props.prompt}</h3>
+          <AsyncStatus />
+          {this.props.children}
         </div>
       </Modal>
     )

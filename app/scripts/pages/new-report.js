@@ -39,6 +39,10 @@ class NewReport extends React.Component {
     }
   }
 
+  renderCountrySelect () {
+    return <div>countries</div>
+  }
+
   render () {
     return (
       <React.Fragment>
@@ -73,9 +77,11 @@ class NewReport extends React.Component {
             <Select
               formID={countryFormID}
               label='Country'
-              schemaPropertyName='country'
               placeholder='No country selected'
-            />
+              prompt='Select a country'
+              schemaPropertyName='country'>
+              {this.renderCountrySelect()}
+            </Select>
 
             <div className='report__ctrls'>
               <button className='report__ctrl report__ctrl__save' onClick={this.save}>Save</button>
