@@ -1,4 +1,5 @@
 'use strict'
+import Promise from 'promise-polyfill'
 import url from 'url'
 import { actionCreator, asyncActionCreator } from 'redux-action-creator'
 import axios from 'axios'
@@ -45,8 +46,8 @@ export const patchReport = asyncActionCreator(
 // Note, we currently don't use the `lastReport` property;
 // however it may be useful at some point to attach fork references.
 export const postReport = asyncActionCreator(
-  types.POST_REPORT, 'payload', 'lastReport',
-  ({ payload }, _, getState) => {
+  types.POST_REPORT, 'payload', 'lastReport', 'tags',
+  ({ payload, tags }) => {
     let _payload = Object.assign({}, payload)
     delete _payload.author
     return axios.post(url.resolve(api, 'reports'), _payload, {
@@ -54,6 +55,15 @@ export const postReport = asyncActionCreator(
         Prefer: 'return=representation',
         Accept: 'application/vnd.pgrst.object+json'
       }
+    }).then(postPayload => {
+      if (!tags || !tags.length) {
+        return Promise.resolve(postPayload)
+      }
+      const id = postPayload.data.id
+      const _tags = tags.map(d => ({ report_id: id, tag_id: d }))
+      return axios.post(url.resolve(api, 'reports_tags'), _tags)
+        .then(() => Promise.resolve(postPayload))
+        .catch(e => Promise.reject(e))
     })
   }
 )
