@@ -60,3 +60,10 @@
   color: $red;
   font-weight: bold;
 }
+
+.select__list__item {
+  display: block;
+  &:hover {
+    background-color: $lightgray;
+  }
+}

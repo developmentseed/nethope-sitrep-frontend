@@ -2,9 +2,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Plain from 'slate-plain-serializer'
+import { get } from 'object-path'
 
 import { getSimpleNotebookPayload } from '../utils/async'
-import { createReport, postReport, forms } from '../actions'
+import { createReport, postReport } from '../actions'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -37,28 +38,16 @@ class NewReport extends React.Component {
       this.props.postReport({ payload })
       this.setState(nextState)
     }
-
-    this.selectCountry = (e) => {
-      e.preventDefault()
-      this.props.update({
-        formID: countryFormID,
-        value: e.currentTarget.getAttribute('data-value')
-      })
-    }
   }
 
   renderCountrySelect () {
     const { countries } = this.props
-    const options = Object.values(countries).sort((a, b) => a.name < b.name ? -1 : 1)
     return (
       <div className='select__country'>
         <ul className='select__list select__country__list'>
-          {options.map(d => (
+          {Object.values(countries).map(d => (
             <li key={d.id}>
-              <a className='select__list__item'
-                href='#'
-                data-value={d.name}
-                onClick={this.selectCountry}>{d.name}</a>
+              <a className='select__list__item'>{d.name}</a>
             </li>
           ))}
         </ul>
@@ -119,7 +108,7 @@ class NewReport extends React.Component {
 const mapStateToProps = (state) => ({
   editorValue: state.newReport.value,
   name: state.forms[nameFieldID],
-  countries: state.countries
+  countries: get(state, 'countries', [])
 })
-const mapDispatch = { ...createReport, postReport, update: forms.update }
+const mapDispatch = { ...createReport, postReport }
 export default connect(mapStateToProps, mapDispatch)(NewReport)

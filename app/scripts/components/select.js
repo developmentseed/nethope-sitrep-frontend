@@ -6,7 +6,6 @@ import { get } from 'object-path'
 import { forms } from '../actions'
 
 import Modal from './modal'
-import AsyncStatus from './async-status'
 
 class Select extends React.Component {
   constructor (props) {
@@ -30,8 +29,9 @@ class Select extends React.Component {
       <Modal className='modal__lg' cancel={this.toggle}>
         <div className='modal__inner'>
           <h3 className='modal__prompt'>{this.props.prompt}</h3>
-          <AsyncStatus />
-          {this.props.children}
+          <div onClick={this.toggle}>
+            {this.props.children}
+          </div>
         </div>
       </Modal>
     )
@@ -58,7 +58,7 @@ class Select extends React.Component {
 
 const mapStateToProps = (state, props) => {
   return {
-    value: get(state.forms, props.formID, ''),
+    value: get(state.forms, props.formID, '')
   }
 }
 
