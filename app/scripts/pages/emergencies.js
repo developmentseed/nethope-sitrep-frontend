@@ -1,26 +1,72 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
+import { stringify } from 'qs'
+import _groupBy from 'lodash.groupby'
 
-import { recentQs } from '../utils/timespans'
-import { getReports, getEmergencies } from '../actions'
+import { getReports, getFeaturedEmergencies, getEmergencies } from '../actions'
+import { lastWeek } from '../utils/timespans'
+import { getCentroid } from '../utils/centroids'
 
 import AsyncStatus from '../components/async-status'
 import Map from '../components/map'
 import EmergencyList from '../components/emergency-list'
 
+function geojsonPoint (coordinates, properties) {
+  return {
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates
+    },
+    properties
+  }
+}
+
+function geojsonFeatureCollection (features) {
+  return {
+    type: 'FeatureCollection',
+    features
+  }
+}
+
 class Emergencies extends React.Component {
   componentDidMount () {
-    if (!this.props.emergencies) {
+    if (!this.props.featured.length) {
+      this.props.getFeaturedEmergencies()
+    }
+    if (this.props.qs && !this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
+
+    // TODO this should use a query that limits the responses
+    // to just those created in the last week.
     this.props.getReports()
   }
 
   componentDidUpdate () {
-    if (!this.props.emergencies) {
+    if (this.props.qs && !this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
+  }
+
+  getMapGeojson () {
+    const { reports, featuredEmergencies, countries } = this.props
+    if (!reports.length || !featuredEmergencies.length) {
+      return null
+    }
+    const groups = _groupBy(reports.filter(d => d.country), 'country')
+    const markers = Object.values(groups).map(group => {
+      let country = countries[group[0].country]
+      let coordinates = getCentroid(country.iso)
+      let properties = {
+        reportIDs: group.map(d => d.id).join(','),
+        numReports: group.length
+      }
+      return geojsonPoint(coordinates, properties)
+    })
+
+    return geojsonFeatureCollection(markers)
   }
 
   render () {
@@ -29,14 +75,14 @@ class Emergencies extends React.Component {
       <div className='page page__ees'>
         <div className='page__header'>
           <div className='inner'>
-            <h2 className='page__title'>Emergencies</h2>
+            <h2 className='page__title'>Active Emergencies</h2>
           </div>
         </div>
-        <Map />
+        <Map markers={this.getMapGeojson()} />
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            { emergencies && <EmergencyList data={emergencies.data} title='Recent Emergencies (last 30 days)' showCountry={true} /> }
+            { emergencies && <EmergencyList data={emergencies.data} title='Recent Emergencies' showCountry={true} /> }
           </div>
         </div>
       </div>
@@ -44,11 +90,30 @@ class Emergencies extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  qs: recentQs,
-  emergencies: state.emergencies[recentQs]
-})
+const mapStateToProps = (state, props) => {
+  const { countries, featured } = state
+  const qs = featured.length ? stringify({
+    id__in: featured.join(','),
+    limit: 100
+  }) : null
 
-const mapDispatch = { getReports, getEmergencies }
+  const emergencies = state.emergencies[qs]
+  const featuredEmergencies = emergencies && Array.isArray(emergencies.data) &&
+    emergencies.data.filter(d => featured.indexOf(d.id) >= 0) || []
+
+  const timespan = lastWeek.getTime()
+  const reports = state.reports.filter(d => d['created_at'] >= timespan)
+
+  return {
+    countries,
+    featured,
+    qs,
+    emergencies,
+    featuredEmergencies,
+    reports
+  }
+}
+
+const mapDispatch = { getReports, getFeaturedEmergencies, getEmergencies }
 
 export default connect(mapStateToProps, mapDispatch)(Emergencies)

@@ -11,11 +11,16 @@ import AsyncStatus from '../components/async-status'
 
 class Home extends React.Component {
   componentDidMount () {
-    this.props.getFeaturedEmergencies()
+    if (!this.props.featured.length) {
+      this.props.getFeaturedEmergencies()
+    }
+    if (this.props.qs && !this.props.emergencies) {
+      this.props.getEmergencies({ qs: this.props.qs })
+    }
   }
 
   componentDidUpdate () {
-    if (!this.props.emergencies && this.props.featured) {
+    if (this.props.qs && !this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
   }
@@ -42,10 +47,10 @@ class Home extends React.Component {
 
 const mapStateToProps = (state) => {
   const { featured } = state
-  const qs = stringify({
+  const qs = featured.length ? stringify({
     id__in: featured.join(','),
     limit: 100
-  })
+  }) : null
 
   let emergencies = state.emergencies[qs]
   if (emergencies && Array.isArray(emergencies.data)) {
