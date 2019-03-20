@@ -13,11 +13,20 @@ const types = createTypes([
 
   ...async('GET_COUNTRIES'),
   ...async('GET_EMERGENCIES'),
+  ...async('GET_EMERGENCY'),
 
+  ...async('GET_FEATURED_EMERGENCIES'),
+  ...async('GET_STATIC_COUNTRY_ASSETS'),
+  ...async('GET_STATIC_EMERGENCY_ASSETS'),
+
+  ...async('GET_TAGS'),
   'SET_USER_CREDENTIALS',
   'CLEAR_USER_CREDENTIALS',
 
   'CLEAR_UPLOAD_REPORT_STATE',
+
+  'CREATE_REPORT_SYNC',
+  'CREATE_REPORT_CLEAR',
 
   'CREATE_FORM',
   'UPDATE_FORM',

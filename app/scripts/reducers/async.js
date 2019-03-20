@@ -3,7 +3,7 @@ import types from '../actions/types'
 
 const initialState = {
   type: null,
-  loading: false,
+  loading: 0,
   error: null
 }
 
@@ -22,11 +22,11 @@ const FAIL = asyncTypes.map(s => s + '_FAIL')
 
 export default function reducer (state = initialState, { type, payload, error }) {
   if (asyncTypes.indexOf(type) >= 0) {
-    return { ...state, type, loading: true }
+    return { ...state, type, loading: state.loading + 1 }
   } else if (SUCCESS.indexOf(type) >= 0) {
-    return { ...state, type, loading: false, error: null }
+    return { ...state, type, loading: state.loading - 1, error: null }
   } else if (FAIL.indexOf(type) >= 0) {
-    return { ...state, type, loading: false, error: error }
+    return { ...state, type, loading: state.loading - 1, error: error }
   }
   return state
 }

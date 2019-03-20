@@ -5,21 +5,24 @@ import { withRouter } from 'react-router-dom'
 import auth0 from 'auth0-js'
 import c from 'classnames'
 import axios from 'axios'
+import { get } from 'object-path'
 
 import { user } from '../actions'
 import { authDomain, authClientID, authRedirectUri } from '../config'
 
+const auth = new auth0.WebAuth({
+  domain: authDomain,
+  clientID: authClientID,
+  redirectUri: authRedirectUri,
+  responseType: 'token id_token',
+  scope: 'openid role email'
+})
+
+export const authorize = auth.authorize.bind(auth)
+
 class Auth extends React.Component {
   constructor (props) {
     super(props)
-
-    this.auth0 = new auth0.WebAuth({
-      domain: authDomain,
-      clientID: authClientID,
-      redirectUri: authRedirectUri,
-      responseType: 'token id_token',
-      scope: 'openid role email'
-    })
 
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
@@ -44,7 +47,7 @@ class Auth extends React.Component {
 
   login (e) {
     e && typeof e.preventDefault === 'function' && e.preventDefault()
-    this.auth0.authorize()
+    auth.authorize()
   }
 
   logout (e) {
@@ -58,7 +61,7 @@ class Auth extends React.Component {
   }
 
   handleAuthentication () {
-    this.auth0.parseHash((err, authResult) => {
+    auth.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {
@@ -80,6 +83,7 @@ class Auth extends React.Component {
     this.props.setCredentials({
       accessToken: authResult.accessToken,
       idToken: authResult.idToken,
+      email: get(authResult, 'idTokenPayload.email'),
       expiresAt
     })
 
@@ -87,7 +91,7 @@ class Auth extends React.Component {
   }
 
   renewSession () {
-    this.auth0.checkSession({}, (err, authResult) => {
+    auth.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult)
       } else if (err) {

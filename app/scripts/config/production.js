@@ -7,6 +7,9 @@ export default {
 
   api: 'https://nethope-sitrep-api.herokuapp.com',
   goApi: 'https://prddsgocdnapi.azureedge.net/api/v2/',
+  goRoot: 'https://go.ifrc.org/',
+
+  siteRoot: '//devseed.com/nethope-sitrep-frontend/',
 
   authDomain: 'nethope-sitrep.auth0.com',
   authClientID: process.env['AUTH_CLIENT_ID'],

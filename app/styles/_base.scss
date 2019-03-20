@@ -38,13 +38,13 @@ a,
 a:visited,
 a:active,
 a:link {
-  color: $black;
+  color: $blue;
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s;
 }
 a:hover {
-  color: $blue;
+  color: lighten($blue, 10%);
 }
 
 input, select, textarea {
@@ -56,4 +56,9 @@ input, select, textarea {
 
 .collecticons {
   line-height: 1;
+}
+
+.light {
+  font-style: italic;
+  color: $medgray;
 }

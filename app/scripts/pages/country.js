@@ -4,11 +4,12 @@ import { connect } from 'react-redux'
 import { stringify } from 'qs'
 
 import { recent } from '../utils/timespans'
-import { getReports, getEmergencies } from '../actions'
+import { getReports, getEmergencies, getStaticCountryAssets } from '../actions'
 
 import AsyncStatus from '../components/async-status'
 import Report from '../components/report'
 import EmergencyList from '../components/emergency-list'
+import Metadata from '../components/metadata'
 
 class Country extends React.Component {
   componentDidMount () {
@@ -16,12 +17,25 @@ class Country extends React.Component {
       this.props.getEmergencies({ qs: this.props.qs })
     }
     this.props.getReports()
+    this.props.getStaticCountryAssets({ countryID: this.props.countryID })
   }
 
   componentDidUpdate (prevProps) {
     if (!this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
+      this.props.getStaticCountryAssets({ countryID: this.props.countryID })
     }
+  }
+
+  renderCountryMetadata () {
+    const { metadata } = this.props.country
+    return (
+      <section className='section'>
+        <div className='inner'>
+          <Metadata data={metadata} />
+        </div>
+      </section>
+    )
   }
 
   render () {
@@ -35,19 +49,20 @@ class Country extends React.Component {
             </div>
           </div>
         ) }
-        <div className='section'>
+        { !!(country && Array.isArray(country.metadata)) && this.renderCountryMetadata() }
+        <section className='section'>
           <div className='inner'>
             <AsyncStatus />
             <div className='reports__cont'>
               {reports.map(report => <Report key={report.id} report={report} />)}
             </div>
           </div>
-        </div>
-        <div className='section'>
+        </section>
+        <section className='section'>
           <div className='inner'>
-            { emergencies && <EmergencyList data={emergencies.data} /> }
+            { emergencies && <EmergencyList data={emergencies.data} title='Recent Emergencies (last 30 days)' /> }
           </div>
-        </div>
+        </section>
       </div>
     )
   }
@@ -70,16 +85,17 @@ const mapStateToProps = (state, props) => {
   const emergencies = state.emergencies[qs]
 
   // Reports matching this emergency
-  const reports = state.reports.filter(d => d.country.toString() === countryID)
+  const reports = state.reports.filter(d => d.country && d.country.toString() === countryID)
 
   return {
     country,
     qs,
     emergencies,
-    reports
+    reports,
+    countryID
   }
 }
 
-const mapDispatch = { getReports, getEmergencies }
+const mapDispatch = { getReports, getEmergencies, getStaticCountryAssets }
 
 export default connect(mapStateToProps, mapDispatch)(Country)

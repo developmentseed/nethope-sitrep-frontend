@@ -3,13 +3,20 @@
   padding: 0 1em;
 }
 
+.inner--full {
+  margin: 0 1em;
+  @include medium-up {
+    margin: 0 2em;
+  }
+}
+
 .page__header {
   background: $lightgray;
   padding: 2em 0 1.75em;
 }
 
 .page__title {
-  font-size: 2em;
+  @include large-heading;
 }
 
 .section {

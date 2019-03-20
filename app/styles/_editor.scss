@@ -1,0 +1,18 @@
+.section__editor {
+  background-color: $lightgray;
+  margin-top: 0;
+  padding-top: 1em;
+  padding-bottom: 4em;
+}
+
+.editor__cont {
+  @include inset-shadow;
+  @include code;
+  padding: 0.5em;
+  background: $white;
+}
+
+.editor {
+  min-height: 600px;
+  width: 100%;
+}

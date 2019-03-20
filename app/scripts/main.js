@@ -11,8 +11,10 @@ import App from './components/app'
 import Home from './pages/home'
 import Reports from './pages/reports'
 import ReportDetail from './pages/report-detail'
+import NewReport from './pages/new-report'
 import Country from './pages/country'
 import Emergencies from './pages/emergencies'
+import Emergency from './pages/emergency'
 import Login from './pages/login'
 import Loading from './pages/loading'
 
@@ -66,10 +68,12 @@ const Root = () => (
         <Switch>
           <PrivateRoute exact path='/' component={Home} />
           <PrivateRoute exact path='/reports' component={Reports} />
+          <PrivateRoute exact path='/reports/new' component={NewReport} />
           <PrivateRoute exact path='/reports/:reportID' component={ReportDetail} />
           <PrivateRoute exact path='/reports/:reportID/update' component={ReportDetail} />
           <PrivateRoute exact path='/emergencies' component={Emergencies} />
           <PrivateRoute exact path='/emergencies/country/:countryID' component={Country} />
+          <PrivateRoute exact path='/emergencies/emergency/:emergencyID' component={Emergency} />
         </Switch>
       </App>
     </HashRouter>

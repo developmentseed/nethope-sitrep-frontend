@@ -5,6 +5,7 @@ const initialState = {
   isLoggedIn: false,
   accessToken: null,
   idToken: null,
+  email: null,
   expiresAt: 0
 }
 
@@ -15,6 +16,7 @@ function reducer (state = initialState, { type, payload }) {
         isLoggedIn: true,
         accessToken: payload.accessToken,
         idToken: payload.idToken,
+        email: payload.email,
         expiresAt: payload.expiresAt
       }
     case types.CLEAR_USER_CREDENTIALS:
