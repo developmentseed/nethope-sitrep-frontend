@@ -1,9 +1,8 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
-import { stringify } from 'qs'
 
-import { recent } from '../utils/timespans'
+import { recentQs } from '../utils/timespans'
 import { getReports, getEmergencies } from '../actions'
 
 import AsyncStatus from '../components/async-status'
@@ -45,19 +44,10 @@ class Emergencies extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  const qs = stringify({
-    disaster_start_date__gt: recent,
-    ordering: '-disaster_start_date',
-    limit: 100
-  })
-  const emergencies = state.emergencies[qs]
-
-  return {
-    qs,
-    emergencies
-  }
-}
+const mapStateToProps = (state, props) => ({
+  qs: recentQs,
+  emergencies: state.emergencies[recentQs]
+})
 
 const mapDispatch = { getReports, getEmergencies }
 
