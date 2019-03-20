@@ -10,7 +10,15 @@ import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
 import EditableText from '../components/editable-text'
 import UploadReportSuccess from '../components/upload-report-success'
-import Select from '../components/select'
+import ReactSelect from '../components/react-select'
+
+import _disasterTypes from '../../static/disaster-types.json'
+import _reportTypes from '../../static/report-types.json'
+import _themes from '../../static/themes.json'
+
+const disasterTypes = _disasterTypes.map(d => ({ label: d.name, value: d.name }))
+const reportTypes = _reportTypes.map(d => ({ label: d.type, value: d.type }))
+const themes = _themes.map(d => ({ label: d.theme, value: d.theme }))
 
 const nameFieldID = 'new-report-name'
 const countryFormID = 'new-report-country'
@@ -47,26 +55,11 @@ class NewReport extends React.Component {
     }
   }
 
-  renderCountrySelect () {
-    const { countries } = this.props
-    const options = Object.values(countries).sort((a, b) => a.name < b.name ? -1 : 1)
-    return (
-      <div className='select__country'>
-        <ul className='select__list select__country__list'>
-          {options.map(d => (
-            <li key={d.id}>
-              <a className='select__list__item'
-                href='#'
-                data-value={d.name}
-                onClick={this.selectCountry}>{d.name}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
-  }
-
   render () {
+    const countries = Object.values(this.props.countries)
+      .sort((a, b) => a.name < b.name ? -1 : 1)
+      .map(d => ({ label: d.name, value: d.id }))
+
     return (
       <React.Fragment>
         <div className='page__header'>
@@ -97,14 +90,10 @@ class NewReport extends React.Component {
               onChange={this.onChange}
               value={this.props.editorValue}/>
 
-            <Select
-              formID={countryFormID}
-              label='Country'
-              placeholder='No country selected'
-              prompt='Select a country'
-              schemaPropertyName='country'>
-              {this.renderCountrySelect()}
-            </Select>
+            <ReactSelect label='Type' options={reportTypes} />
+            <ReactSelect label='Country' options={countries} />
+            <ReactSelect label='Themes' options={themes} />
+            <ReactSelect label='Disaster Types' options={disasterTypes} />
 
             <div className='report__ctrls'>
               <button className='report__ctrl report__ctrl__save' onClick={this.save}>Save</button>
@@ -119,7 +108,7 @@ class NewReport extends React.Component {
 const mapStateToProps = (state) => ({
   editorValue: state.newReport.value,
   name: state.forms[nameFieldID],
-  countries: state.countries
+  countries: state.countries || {}
 })
 const mapDispatch = { ...createReport, postReport, update: forms.update }
 export default connect(mapStateToProps, mapDispatch)(NewReport)

@@ -67,3 +67,8 @@
     background-color: $lightgray;
   }
 }
+
+.select {
+  @include code;
+  margin-top: 1em;
+}
