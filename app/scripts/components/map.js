@@ -39,10 +39,39 @@ class Map extends React.Component {
   constructor (props) {
     super(props)
     this.container = React.createRef()
+    this.renderAssets = () => {
+      const { sources, layers } = this.props
+
+      // Load sources
+      Object.keys(sources).forEach(key => {
+        this.map.addSource(key, sources[key])
+      })
+
+      // Add layers, including dependencies
+      layers.forEach(({ layer, dependencies }) => {
+        if (dependencies) {
+          this.map.loadImage(dependencies.image, (e, image) => {
+            this.map.addImage(dependencies.key, image)
+            this.map.addLayer(layer)
+          })
+        } else this.map.addLayer(layer)
+      })
+    }
   }
 
   componentDidMount () {
     this.map = map(this.container.current)
+    this.map.on('load', () => {
+      if (this.props.sources && this.props.layers) {
+        this.renderAssets()
+      }
+    })
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.sources && this.props.layers && !prevProps.sources && !prevProps.layers) {
+      this.renderAssets()
+    }
   }
 
   componentWillUnmount () {
@@ -53,9 +82,12 @@ class Map extends React.Component {
 
   render () {
     return (
-      <div className='map__cont'>
-        <div className='map' style={mapStyle} ref={this.container} />
-      </div>
+      <React.Fragment>
+        <div className='map__cont'>
+          <div className='map' style={mapStyle} ref={this.container} />
+        </div>
+        {this.props.children}
+      </React.Fragment>
     )
   }
 }

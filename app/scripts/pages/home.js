@@ -1,6 +1,5 @@
 'use strict'
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { stringify } from 'qs'
 
@@ -11,11 +10,16 @@ import AsyncStatus from '../components/async-status'
 
 class Home extends React.Component {
   componentDidMount () {
-    this.props.getFeaturedEmergencies()
+    if (!this.props.featured.length) {
+      this.props.getFeaturedEmergencies()
+    }
+    if (this.props.qs && !this.props.emergencies) {
+      this.props.getEmergencies({ qs: this.props.qs })
+    }
   }
 
   componentDidUpdate () {
-    if (!this.props.emergencies) {
+    if (this.props.qs && !this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
     }
   }
@@ -31,8 +35,6 @@ class Home extends React.Component {
         </div>
         <div className='section'>
           <div className='inner'>
-            <h3 className='section__title'><Link to='/reports'>Reports</Link></h3>
-            <h3 className='section__title'><Link to='/emergencies'>Emergencies</Link></h3>
             <AsyncStatus />
             { emergencies && <EmergencyList data={emergencies.data} title='Active Emergencies' showCountry={true} /> }
           </div>
@@ -44,11 +46,16 @@ class Home extends React.Component {
 
 const mapStateToProps = (state) => {
   const { featured } = state
-  const qs = stringify({
-    id__in: featured.join(',')
-  })
+  const qs = featured.length ? stringify({
+    id__in: featured.join(','),
+    limit: 100
+  }) : null
 
-  const emergencies = state.emergencies[qs]
+  let emergencies = state.emergencies[qs]
+  if (emergencies && Array.isArray(emergencies.data)) {
+    emergencies.data = emergencies.data.filter(d => featured.indexOf(d.id) >= 0)
+  }
+
   return {
     featured,
     qs,

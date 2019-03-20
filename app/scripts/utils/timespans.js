@@ -3,6 +3,7 @@ import { stringify } from 'qs'
 
 export const now = new Date()
 export const recent = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 30)
+export const lastWeek = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
 
 // Shortcut to export a QS for emergency queries
 export const recentQs = stringify({
