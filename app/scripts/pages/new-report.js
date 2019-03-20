@@ -18,7 +18,6 @@ import EmergencyList from '../components/emergency-list'
 
 import _disasterTypes from '../../static/disaster-types.json'
 import _reportTypes from '../../static/report-types.json'
-import _themes from '../../static/themes.json'
 
 const disasterTypes = _disasterTypes.map(d => ({ label: d.name, value: d.name }))
 const reportTypes = _reportTypes.map(d => ({ label: d.type, value: d.type }))
@@ -77,7 +76,7 @@ class NewReport extends React.Component {
         payload['disaster_type'] = disasterField.value
 
         const tags = Array.isArray(themeField) && themeField.map(d => d.value)
-        // this.props.postReport({ payload, tags })
+        this.props.postReport({ payload, tags })
       }
 
       this.setState(nextState)
