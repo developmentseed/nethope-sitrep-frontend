@@ -2,6 +2,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Plain from 'slate-plain-serializer'
+import { get } from 'object-path'
 
 import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
@@ -25,37 +26,72 @@ const themes = _themes.map(d => ({ label: d.theme, value: d.theme }))
 
 const nameFieldID = 'new-report-name'
 const emergencyFieldID = 'new-report-emergency'
+const countryFieldID = 'new-report-country'
+const typeFieldID = 'new-report-type'
+const themeFieldID = 'new-report-theme'
+const disasterFieldID = 'new-report-disaster-type'
 
 class NewReport extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      showNameRequired: false
+      showNameRequired: false,
+      showCountryRequired: false,
+      showReportTypeRequired: false
     }
 
-    this.onChange = (change) => {
+    this.onEditorChange = (change) => {
       this.props.sync({ value: change.value })
     }
 
+    this.getEmergency = (value) => {
+      if (!value || !this.props.emergencies || !this.props.emergencies.data.length) return null
+      return this.props.emergencies.data.find(d => d.name === value)
+    }
+
     this.save = () => {
-      const { name, editorValue } = this.props
+      const {
+        name,
+        editorValue,
+        emergencyField,
+        countryField,
+        typeField,
+        themeField,
+        disasterField
+      } = this.props
+
       const nextState = {
-        showNameRequired: !name
+        showNameRequired: !name,
+        showCountryRequired: !countryField,
+        showReportTypeRequired: !typeField
       }
-      const body = Plain.serialize(editorValue)
-      const payload = getSimpleNotebookPayload(name, body)
-      this.props.postReport({ payload })
+
+      if (name && countryField && typeField) {
+        const body = Plain.serialize(editorValue)
+        const payload = getSimpleNotebookPayload(name, body)
+        payload.country = countryField.value
+        payload.emergency = get(this.getEmergency(emergencyField), 'id')
+
+        let tags = []
+
+        // this.props.postReport({ payload })
+      }
+
       this.setState(nextState)
     }
 
     this.selectEmergency = (e) => {
       e.preventDefault()
       const value = e.currentTarget.getAttribute('data-name')
-      this.props.update({
-        formID: emergencyFieldID,
-        value
-      })
+      this.props.update({ formID: emergencyFieldID, value })
+      // If the country hasn't been set, sync it
+      if (!this.props.countryField) {
+        // Though an emergency can have multiple countries, we use the first one.
+        const countryID = get(this.getEmergency(value), 'countries.0.id', false)
+        const country = countryID && this.props.countries.find(d => d.value === countryID)
+        if (country) this.props.update({ formID: countryFieldID, value: country })
+      }
     }
   }
 
@@ -80,10 +116,6 @@ class NewReport extends React.Component {
   }
 
   render () {
-    const countries = Object.values(this.props.countries)
-      .sort((a, b) => a.name < b.name ? -1 : 1)
-      .map(d => ({ label: d.name, value: d.id }))
-
     return (
       <React.Fragment>
         <div className='page__header'>
@@ -102,7 +134,7 @@ class NewReport extends React.Component {
                 className='report__name'
                 formID={nameFieldID}
                 initialValue=''
-                label='Name'
+                label='Name*'
                 placeholder='Enter a report name'
                 hideSubmit={true}
                 schemaPropertyName='name'
@@ -111,7 +143,7 @@ class NewReport extends React.Component {
             </div>
 
             <MarkdownReportEditor
-              onChange={this.onChange}
+              onChange={this.onEditorChange}
               value={this.props.editorValue}/>
 
             <div className='tags'>
@@ -121,13 +153,27 @@ class NewReport extends React.Component {
                 prompt='Choose an emergency'>
                 {this.renderEmergencyTable()}
               </Select>
-              <ReactSelect label='Country' options={countries} />
+
+              <ReactSelect formID={countryFieldID}
+                label='Country*'
+                options={this.props.countries}
+                showRequired={this.state.showCountryRequired} />
             </div>
 
             <div className='tags tags__inline'>
-              <ReactSelect className='reactselect__cont--inline' label='Report Type' options={reportTypes} />
-              <ReactSelect className='reactselect__cont--inline' label='Theme' options={themes} />
-              <ReactSelect className='reactselect__cont--inline' label='Disaster Type' options={disasterTypes} />
+              <ReactSelect formID={typeFieldID}
+                className='reactselect__cont--inline'
+                label='Report Type*'
+                options={reportTypes}
+                showRequired={this.state.showReportTypeRequired} />
+              <ReactSelect formID={themeFieldID}
+                className='reactselect__cont--inline'
+                label='Theme'
+                options={themes} />
+              <ReactSelect formID={disasterFieldID}
+                className='reactselect__cont--inline'
+                label='Disaster Type'
+                options={disasterTypes} />
             </div>
 
             <div className='report__ctrls'>
@@ -141,12 +187,23 @@ class NewReport extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  countries: Object.values(state.countries || {})
+    .sort((a, b) => a.name < b.name ? -1 : 1)
+    .map(d => ({ label: d.name, value: d.id })),
+
+  emergencies: state.emergencies[recentQs],
+  qs: recentQs,
+
+  // form values
   editorValue: state.newReport.value,
   name: state.forms[nameFieldID],
-  countries: state.countries || {},
-  emergencies: state.emergencies[recentQs],
-  qs: recentQs
+  emergencyField: state.forms[emergencyFieldID],
+  countryField: state.forms[countryFieldID],
+  typeField: state.forms[typeFieldID],
+  themeField: state.forms[themeFieldID],
+  disasterField: state.forms[disasterFieldID]
 })
+
 const mapDispatch = {
   ...createReport,
   postReport,
