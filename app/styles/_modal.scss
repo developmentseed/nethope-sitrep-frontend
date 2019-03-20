@@ -22,6 +22,19 @@
   z-index: 100;
 }
 
+.modal__lg {
+  bottom: 1.5em;
+  left: 1.5em;
+  right: 1.5em;
+  top: 1.5em;
+  @include medium-up {
+    bottom: 10%;
+    left: 10%;
+    right: 10%;
+    top: 10%;
+  }
+}
+
 .modal__inner {
   padding: 1em;
 }

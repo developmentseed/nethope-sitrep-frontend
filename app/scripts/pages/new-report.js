@@ -10,8 +10,10 @@ import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
 import EditableText from '../components/editable-text'
 import UploadReportSuccess from '../components/upload-report-success'
+import Select from '../components/select'
 
 const nameFieldID = 'new-report-name'
+const countryFormID = 'new-report-country'
 
 class NewReport extends React.Component {
   constructor (props) {
@@ -66,7 +68,13 @@ class NewReport extends React.Component {
 
             <MarkdownReportEditor
               onChange={this.onChange}
-              value={this.props.editorValue}
+              value={this.props.editorValue}/>
+
+            <Select
+              formID={countryFormID}
+              label='Country'
+              schemaPropertyName='country'
+              placeholder='No country selected'
             />
 
             <div className='report__ctrls'>
