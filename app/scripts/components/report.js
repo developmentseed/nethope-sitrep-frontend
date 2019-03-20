@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { ago } from 'time-ago'
 
-import { getFirstImageOutput, getAuthorFromEmail } from '../utils/notebook'
+import { getReportLeadImage, getAuthorFromEmail } from '../utils/notebook'
 
 function Report ({ report, country }) {
   const verb = report['forked_from'] ? 'forked' : 'created'
-  const image = getFirstImageOutput(report)
-  const dataUri = image && 'data:' + image.mime + ';base64,' + image.dataUri
+  const image = getReportLeadImage(report)
+  const dataUri = image && (image.dataUri ? 'data:' + image.mime + ';base64,' + image.dataUri : image.imageUri)
   return (
     <div className='reportcard'>
       <Link className='reportcard__primary' to={`/reports/${report.id}`}>
