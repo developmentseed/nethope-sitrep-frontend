@@ -60,7 +60,7 @@
   font-weight: bold;
 }
 
-.reportcard__dl {
+.dl {
   dt {
     font-weight: bold;
     float: left;
@@ -134,6 +134,8 @@
   margin-top: 3em;
 }
 
+.report__owner,
+.report__tags,
 .report__upload {
   margin-top: 1em;
 }
