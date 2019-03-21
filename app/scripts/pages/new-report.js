@@ -102,6 +102,10 @@ class NewReport extends React.Component {
     }
   }
 
+  componentWillUnmount () {
+    this.props.clear()
+  }
+
   renderEmergencyTable () {
     const { emergencies } = this.props
     if (!emergencies || !emergencies.data.length) return <AsyncStatus />
