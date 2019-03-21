@@ -7,6 +7,7 @@ import { get } from 'object-path'
 import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
 import { createReport, postReport, forms, getEmergencies, getTags } from '../actions'
+import { disasterTypes, reportTypes } from '../utils/static-types'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -15,12 +16,6 @@ import UploadReportSuccess from '../components/upload-report-success'
 import ReactSelect from '../components/react-select'
 import Select from '../components/select'
 import EmergencyList from '../components/emergency-list'
-
-import _disasterTypes from '../../static/disaster-types.json'
-import _reportTypes from '../../static/report-types.json'
-
-const disasterTypes = _disasterTypes.map(d => ({ label: d.name, value: d.name }))
-const reportTypes = _reportTypes.map(d => ({ label: d.type, value: d.type }))
 
 const nameFieldID = 'new-report-name'
 const emergencyFieldID = 'new-report-emergency'
