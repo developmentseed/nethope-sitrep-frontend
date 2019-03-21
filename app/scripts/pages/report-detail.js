@@ -8,7 +8,7 @@ import { get } from 'object-path'
 import { ago } from 'time-ago'
 
 import { nope } from '../utils/format'
-import { getReport, getEmergency } from '../actions'
+import { getReport, getEmergency, deleteReport } from '../actions'
 import { getAuthorFromEmail } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
@@ -28,6 +28,10 @@ class ReportDetail extends React.Component {
         `${slugify(this.props.report.name)}.ipynb`,
         'application/json'
       )
+    }
+
+    this.delete = () => {
+      this.props.deleteReport({ id: this.id() })
     }
   }
 
@@ -130,6 +134,11 @@ class ReportDetail extends React.Component {
               <span className='collecticons collecticons-wrench' />Update this report
             </Link>
           ) : <ForkReport current={report.id} /> }
+          { false && (
+            <button className='report__ctrl report__ctrl__del' onClick={this.delete}>
+              <span className='collecticons collecticons-trash-bin' />Delete this report
+            </button>
+          ) }
         </div>
         {this.renderReportOwner()}
         {this.renderReportMeta()}
@@ -177,6 +186,6 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatch = { getReport, getEmergency }
+const mapDispatch = { getReport, getEmergency, deleteReport }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
