@@ -22,6 +22,11 @@ export const getReports = asyncActionCreator(
   () => axios.get(url.resolve(api, 'reports'))
 )
 
+export const getReportsWithQs = asyncActionCreator(
+  types.GET_REPORTS, 'qs',
+  ({ qs }) => axios.get(url.resolve(api, `reports${qs}`))
+)
+
 const requestReport = (id) => axios.get(url.resolve(api, `reports?id=eq.${id}`), {
   headers: { Accept: 'application/vnd.pgrst.object+json' }
 })
@@ -77,6 +82,16 @@ export const postReport = asyncActionCreator(
         .catch(e => Promise.reject(e))
     })
   }
+)
+
+// TODO The report delete might not be necessary, confirming whether behavior is CASCADE
+const deleteReportItem = (id) => axios.delete(url.resolve(api, `reports?id=eq.${id}`))
+const deleteReportTags = (id) => axios.delete(url.resolve(api, `report_tags?report_id=eq.${id}`))
+
+export const deleteReport = asyncActionCreator(
+  types.DELETE_REPORT, 'id',
+  ({ id }) => axios.all([deleteReportItem(id), deleteReportTags(id)])
+    .then(axios.spread(() => Promise.resolve(true)))
 )
 
 export const getCountries = asyncActionCreator(

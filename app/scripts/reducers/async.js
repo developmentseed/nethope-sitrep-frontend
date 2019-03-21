@@ -14,6 +14,7 @@ const asyncTypes = [
   types.PATCH_REPORT,
   types.READ_REPORT,
   types.POST_REPORT,
+  types.DELETE_REPORT,
   types.GET_COUNTRIES,
   types.GET_EMERGENCIES
 ]
