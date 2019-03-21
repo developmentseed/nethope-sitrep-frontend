@@ -7,8 +7,8 @@ import slugify from 'slugify'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
 
-import { nope } from '../utils/format'
-import { getReport, getEmergency } from '../actions'
+import { nope, cap, reportTitle } from '../utils/format'
+import { getReport, getEmergency, deleteReport } from '../actions'
 import { getAuthorFromEmail } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
@@ -28,6 +28,10 @@ class ReportDetail extends React.Component {
         `${slugify(this.props.report.name)}.ipynb`,
         'application/json'
       )
+    }
+
+    this.delete = () => {
+      this.props.deleteReport({ id: this.id() })
     }
   }
 
@@ -102,7 +106,7 @@ class ReportDetail extends React.Component {
             </React.Fragment>
           ) }
           <dt>Disaster type:</dt>
-          <dd>{report['disaster_type']}</dd>
+          <dd>{cap(report['disaster_type'])}</dd>
 
           <dt>Themes:</dt>
           <dd>{themes}</dd>
@@ -130,6 +134,11 @@ class ReportDetail extends React.Component {
               <span className='collecticons collecticons-wrench' />Update this report
             </Link>
           ) : <ForkReport current={report.id} /> }
+          { false && (
+            <button className='report__ctrl report__ctrl__del' onClick={this.delete}>
+              <span className='collecticons collecticons-trash-bin' />Delete this report
+            </button>
+          ) }
         </div>
         {this.renderReportOwner()}
         {this.renderReportMeta()}
@@ -147,7 +156,7 @@ class ReportDetail extends React.Component {
       <div className='page page__report'>
         <div className='page__header'>
           <div className='inner'>
-            <h2 className='page__title'>{report.report_type && report.report_type + ': '}{report.name}</h2>
+            <h2 className='page__title'>{reportTitle(report)}</h2>
           </div>
         </div>
         <div className='section'>
@@ -177,6 +186,6 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatch = { getReport, getEmergency }
+const mapDispatch = { getReport, getEmergency, deleteReport }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
