@@ -25,7 +25,7 @@ class Reports extends React.Component {
           <div className='inner'>
             <AsyncStatus />
           </div>
-          <div className='inner--full'>
+          <div className='inner'>
             <div className='report__ctrls'>
               <Link className='report__ctrl report__ctrl__new' to='/reports/new' >
                 <span className='collecticons collecticons-page' /> New Report

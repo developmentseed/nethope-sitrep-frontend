@@ -3,6 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { ago } from 'time-ago'
+import c from 'classnames'
 
 import { getReportLeadImage, getAuthorFromEmail } from '../utils/notebook'
 
@@ -11,7 +12,7 @@ function Report ({ report, country }) {
   const image = getReportLeadImage(report)
   const dataUri = image && (image.dataUri ? 'data:' + image.mime + ';base64,' + image.dataUri : image.imageUri)
   return (
-    <div className='reportcard'>
+    <div className={c('reportcard', { 'reportcard__wide': !!image })}>
       <Link className='reportcard__primary' to={`/reports/${report.id}`}>
         {image && (
           <div className='reportcard__image'>
