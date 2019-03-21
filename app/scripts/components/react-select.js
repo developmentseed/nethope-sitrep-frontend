@@ -17,6 +17,10 @@ class ReactSelect extends React.Component {
     this.props.create({ formID: this.props.formID, initialValue: this.props.initialValue || '' })
   }
 
+  componentWillUnmount () {
+    this.props.destroy({ formID: this.props.formID })
+  }
+
   render () {
     const { options, label } = this.props
     return (
