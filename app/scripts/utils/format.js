@@ -5,7 +5,7 @@ export function n (x) {
 }
 
 export function reportTitle (report) {
-  return `${report['report_type']}: ${report.name}`
+  return `${cap(report['report_type'])}: ${report.name}`
 }
 
 export function cap (string) {

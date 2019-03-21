@@ -7,7 +7,7 @@ import slugify from 'slugify'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
 
-import { nope } from '../utils/format'
+import { nope, cap, reportTitle } from '../utils/format'
 import { getReport, getEmergency, deleteReport } from '../actions'
 import { getAuthorFromEmail } from '../utils/notebook'
 
@@ -106,7 +106,7 @@ class ReportDetail extends React.Component {
             </React.Fragment>
           ) }
           <dt>Disaster type:</dt>
-          <dd>{report['disaster_type']}</dd>
+          <dd>{cap(report['disaster_type'])}</dd>
 
           <dt>Themes:</dt>
           <dd>{themes}</dd>
@@ -156,7 +156,7 @@ class ReportDetail extends React.Component {
       <div className='page page__report'>
         <div className='page__header'>
           <div className='inner'>
-            <h2 className='page__title'>{report.report_type && report.report_type + ': '}{report.name}</h2>
+            <h2 className='page__title'>{reportTitle(report)}</h2>
           </div>
         </div>
         <div className='section'>

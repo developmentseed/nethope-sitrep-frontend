@@ -20,7 +20,7 @@ function renderDisasterTypeDetails (report) {
   if (!report['disaster_type']) return null
   return [
     <dt key='dt'>Disaster Type:</dt>,
-    <dd key='dd'>{report['disaster_type']}</dd>
+    <dd key='dd'>{cap(report['disaster_type'])}</dd>
   ]
 }
 
