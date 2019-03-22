@@ -3,7 +3,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import c from 'classnames'
 import { get } from 'object-path'
+import { withRouter } from 'react-router'
 
+import { syncLocation } from '../utils/location'
 import { forms } from '../actions'
 
 class EditableText extends React.Component {
@@ -24,6 +26,13 @@ class EditableText extends React.Component {
       if (!this.isDisabled()) {
         this.props.onSubmit({ [this.props.schemaPropertyName]: this.props.value })
       }
+      if (this.props.isLocationAware) {
+        syncLocation(this.props.history, this.props.location, this.props.value, this.props.formID)
+      }
+    }
+
+    if (this.props.isLocationAware) {
+      syncLocation(this.props.history, this.props.location, this.props.value, this.props.formID)
     }
   }
 
@@ -43,6 +52,7 @@ class EditableText extends React.Component {
         <label className='editable__label' htmlFor={this.props.formID}>{this.props.label} {this.props.showRequired && <span className='error__label'><span className='collecticons collecticons-circle-information' /> this field is required</span>}</label>
         <input className='editable__input'
           type='text'
+          spellCheck={false}
           id={this.props.formID}
           placeholder={placeholder}
           value={this.props.value || ''}
@@ -82,4 +92,4 @@ const mapStateToProps = (state, props) => {
 
 const mapDispatch = { ...forms }
 
-export default connect(mapStateToProps, mapDispatch)(EditableText)
+export default withRouter(connect(mapStateToProps, mapDispatch)(EditableText))

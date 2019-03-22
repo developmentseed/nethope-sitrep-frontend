@@ -1,11 +1,11 @@
 'use strict'
 import React from 'react'
 import { connect } from 'react-redux'
-import { parse, stringify } from 'qs'
-import { Link } from 'react-router-dom'
+import { stringify } from 'qs'
 
 import { getReportsWithQs, forms, getTags } from '../actions'
 import { disasterTypes, reportTypes } from '../utils/static-types'
+import { currentQueryAsObject } from '../utils/location'
 
 import Report from '../components/report'
 import AsyncStatus from '../components/async-status'
@@ -15,34 +15,24 @@ import EditableText from '../components/editable-text'
 const dTypes = disasterTypes.map(d => d.value)
 const rTypes = reportTypes.map(d => d.value)
 
-const DTYPE = 'disaster_type'
-const RTYPE = 'report_type'
-const THEME = 'theme'
-const COUNTRY = 'country'
-
-const fields = [
-  { propName: 'countryField', qs: COUNTRY },
-  { propName: 'typeField', qs: RTYPE },
-  { propName: 'disasterField', qs: DTYPE },
-  { propName: 'themeField', qs: THEME }
-]
+const fields = {
+  dtype: 'disaster_type',
+  rtype: 'report_type',
+  country: 'country',
+  search: 'search'
+}
 
 class Reports extends React.Component {
   constructor (props) {
     super(props)
-    this.submitSearch = ({ value }) => {
-      const s = this.currentQueryAsObject() || {}
-      if (!value) {
-        delete s.search
-      } else {
-        s.search = value
-      }
-      this.props.history.push(`/reports/?${stringify(s)}`)
+    this.clearFilters = (e) => {
+      e.preventDefault()
+      this.props.history.push('/reports')
     }
   }
 
   componentDidMount () {
-    this.props.getReportsWithQs({ qs: this.queryString() })
+    this.queryReports()
     if (!this.props.themes) {
       this.props.getTags()
     }
@@ -50,83 +40,41 @@ class Reports extends React.Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.location.search !== prevProps.location.search) {
-      this.props.getReportsWithQs({ qs: this.queryString() })
-    }
-
-    const needsUpdate = fields.some(f => this.props[f.propName] && this.props[f.propName] !== prevProps[f.propName])
-    if (needsUpdate) {
-      let qs = {}
-      fields.forEach(f => {
-        let stateValue = this.props[f.propName]
-        if (Array.isArray(stateValue) && stateValue.length) {
-          qs[f.qs] = stateValue.map(d => d.value).join(',')
-        } else if (stateValue && stateValue.hasOwnProperty('value')) {
-          qs[f.qs] = stateValue.value
-        }
-      })
-      const search = `?${stringify(qs)}`
-      if (search !== this.props.location.search) {
-        this.props.history.push(`/reports/?${stringify(qs)}`)
-      }
+      this.queryReports()
     }
   }
 
-  currentQueryAsObject () {
-    if (!this.props.location.search.length) {
-      return null
+  // Use location state to query reports
+  queryReports () {
+    const s = currentQueryAsObject(this.props.location.search)
+    let query = {}
+
+    if (s[fields.dtype] && dTypes.indexOf(s[fields.dtype].toLowerCase()) >= 0) {
+      query[fields.dtype] = `like.${s[fields.dtype]}`
     }
-    return parse(this.props.location.search.slice(1, this.props.location.search.length))
+
+    if (s[fields.rtype] && rTypes.indexOf(s[fields.rtype].toLowerCase()) >= 0) {
+      query[fields.rtype] = `like.${s[fields.rtype]}`
+    }
+
+    // Loaded async, so we don't do checking on this.
+    if (s[fields.country]) {
+      query[fields.country] = `eq.${s[fields.country]}`
+    }
+
+    if (s[fields.search]) {
+      query.name = `fts.${s.search}`
+    }
+
+    let qs = stringify(query)
+    qs = qs ? '?' + qs : ''
+    this.props.getReportsWithQs({ qs })
   }
 
-  queryString () {
-    const s = this.currentQueryAsObject()
-    if (!s) {
-      return ''
-    }
-
-    let qs = {}
-
-    if (s.hasOwnProperty(DTYPE) && dTypes.indexOf(s[DTYPE].toLowerCase()) >= 0) {
-      qs[DTYPE] = `like.${s[DTYPE]}`
-      if (!this.props.disasterField || this.props.disasterField.value !== s[DTYPE]) {
-        this.props.update({
-          formID: 'filter-disaster-type',
-          value: disasterTypes.find(d => d.value === s[DTYPE])
-        })
-      }
-    }
-
-    if (s.hasOwnProperty(RTYPE) && rTypes.indexOf(s[RTYPE].toLowerCase()) >= 0) {
-      qs[RTYPE] = `like.${s[RTYPE]}`
-      if (!this.props.typeField || this.props.typeField.value !== s[RTYPE]) {
-        this.props.update({
-          formID: 'filter-report-type',
-          value: reportTypes.find(d => d.value === s[RTYPE])
-        })
-      }
-    }
-
-    // Since these two are loaded async,
-    // we don't do checking on them
-    if (s.hasOwnProperty(COUNTRY)) {
-      qs[COUNTRY] = `eq.${s[COUNTRY]}`
-    }
-
-    if (s.hasOwnProperty('search')) {
-      qs.name = `fts.${s.search}`
-    }
-
-    return '?' + stringify(qs)
-  }
-
-  clearFilters () {
-  }
-
-  renderClearFilters () {
-    if (!this.propscountryField && !this.props.typeField && !this.props.disasterField) {
-      return null
-    }
-    return <Link to='/reports'>clear</Link>
+  renderClear () {
+    return <a href='#' onClick={this.clearFilters} className='clear__filter'>
+      <span className='collecticons collecticons-trash-bin' />
+    </a>
   }
 
   render () {
@@ -141,33 +89,37 @@ class Reports extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            <h3 className='section__title'>Search and filter reports {false && this.renderClearFilters()}</h3>
+            <h3 className='section__title'>Search and filter reports {!!this.props.location.search && this.renderClear()}</h3>
             <div className='tags'>
               <EditableText
                 canEdit={true}
-                formID={'report-search'}
+                formID={fields.search}
                 label={'Search for a report'}
                 placeholder='Type a search...'
-                onSubmit={this.submitSearch}
+                onSubmit={() => false}
                 schemaPropertyName='value'
+                isLocationAware={true}
               />
             </div>
 
             <div className='tags'>
-              <ReactSelect formID='filter-country'
+              <ReactSelect formID={fields.country}
                 label='Filter by country'
-                options={this.props.countries} />
+                options={this.props.countries}
+                isLocationAware={true} />
             </div>
 
             <div className='tags tags__inline'>
-              <ReactSelect formID='filter-report-type'
+              <ReactSelect formID={fields.rtype}
                 className='reactselect__cont--inline'
                 label='Filter by report type'
-                options={reportTypes} />
-              <ReactSelect formID='filter-disaster-type'
+                options={reportTypes}
+                isLocationAware={true} />
+              <ReactSelect formID={fields.dtype}
                 className='reactselect__cont--inline'
                 label='Filter by disaster type'
-                options={disasterTypes} />
+                options={disasterTypes}
+                isLocationAware={true} />
             </div>
 
             { false && (
@@ -199,11 +151,11 @@ const mapStateToProps = (state, props) => {
     reports: state.reports,
 
     // form state
-    countryField: state.forms['filter-country'],
-    typeField: state.forms['filter-report-type'],
-    disasterField: state.forms['filter-disaster-type'],
+    countryField: state.forms[fields.country],
+    typeField: state.forms[fields.rtype],
+    disasterField: state.forms[fields.dtype],
     themeField: state.forms['filter-themes'],
-    searchField: state.forms['report-search']
+    searchField: state.forms[fields.search]
   }
 }
 

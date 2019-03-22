@@ -2,7 +2,10 @@
 import React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 import c from 'classnames'
+
+import { syncLocation } from '../utils/location'
 import { forms } from '../actions'
 
 class ReactSelect extends React.Component {
@@ -10,11 +13,18 @@ class ReactSelect extends React.Component {
     super(props)
     this.onChange = (value) => {
       this.props.update({ formID: this.props.formID, value })
+      if (this.props.isLocationAware) {
+        syncLocation(this.props.history, this.props.location, value.value, this.props.formID)
+      }
     }
   }
 
   componentDidMount () {
+    const initialValue = this.props.initialValue || ''
     this.props.create({ formID: this.props.formID, initialValue: this.props.initialValue || '' })
+    if (this.props.isLocationAware) {
+      syncLocation(this.props.history, this.props.location, initialValue, this.props.formID)
+    }
   }
 
   componentWillUnmount () {
@@ -42,4 +52,4 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatch = { ...forms }
 
-export default connect(mapStateToProps, mapDispatch)(ReactSelect)
+export default withRouter(connect(mapStateToProps, mapDispatch)(ReactSelect))

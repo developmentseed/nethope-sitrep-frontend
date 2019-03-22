@@ -36,4 +36,14 @@
 
 .section__title {
   @include medium-heading;
+  .clear__filter {
+    background-color: $red;
+    color: $white;
+    display: inline-boock;
+    padding: 2px 6px;
+    border-radius: 3px;
+    .collecticons {
+      font-size: 0.7em;
+    }
+  }
 }
