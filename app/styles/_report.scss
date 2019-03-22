@@ -23,20 +23,20 @@
   }
 }
 
+@mixin reportcard-hover {
+  color: $black;
+  border-bottom: 1px solid $blue;
+  text-decoration: none;
+}
+
 .reportcard__primary {
   border-bottom: $light-border;
   cursor: pointer;
   display: block;
   padding: 1em;
   &:hover {
-    color: $black;
-    border-bottom: 1px solid $blue;
-    text-decoration: none;
+    @include reportcard-hover;
   }
-}
-
-.reportcard__title {
-  line-height: 1;
 }
 
 .reportcard__image {
@@ -58,6 +58,25 @@
 
 .reportcard__author {
   font-weight: bold;
+}
+
+.reportcard__select {
+  cursor: pointer;
+  &:hover {
+    .reportcard__primary {
+      @include reportcard-hover;
+    }
+  }
+}
+
+.reportcard__selected {
+  background-color: $red;
+  border-radius: 2px;
+  color: $white;
+  display: inline-block;
+  font-size: 0.9em;
+  margin-right: 5px;
+  padding: 3px 1px 1px 1px;
 }
 
 .dl {
