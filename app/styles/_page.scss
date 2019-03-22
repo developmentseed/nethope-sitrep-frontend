@@ -17,6 +17,7 @@
 
 .page__title {
   @include large-heading;
+  line-height: 1.4;
 }
 
 .section {

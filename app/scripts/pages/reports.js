@@ -10,6 +10,7 @@ import { disasterTypes, reportTypes } from '../utils/static-types'
 import Report from '../components/report'
 import AsyncStatus from '../components/async-status'
 import ReactSelect from '../components/react-select'
+import EditableText from '../components/editable-text'
 
 const dTypes = disasterTypes.map(d => d.value)
 const rTypes = reportTypes.map(d => d.value)
@@ -27,6 +28,19 @@ const fields = [
 ]
 
 class Reports extends React.Component {
+  constructor (props) {
+    super(props)
+    this.submitSearch = ({ value }) => {
+      const s = this.currentQueryAsObject() || {}
+      if (!value) {
+        delete s.search
+      } else {
+        s.search = value
+      }
+      this.props.history.push(`/reports/?${stringify(s)}`)
+    }
+  }
+
   componentDidMount () {
     this.props.getReportsWithQs({ qs: this.queryString() })
     if (!this.props.themes) {
@@ -57,12 +71,19 @@ class Reports extends React.Component {
     }
   }
 
-  queryString () {
+  currentQueryAsObject () {
     if (!this.props.location.search.length) {
+      return null
+    }
+    return parse(this.props.location.search.slice(1, this.props.location.search.length))
+  }
+
+  queryString () {
+    const s = this.currentQueryAsObject()
+    if (!s) {
       return ''
     }
 
-    const s = parse(this.props.location.search.slice(1, this.props.location.search.length))
     let qs = {}
 
     if (s.hasOwnProperty(DTYPE) && dTypes.indexOf(s[DTYPE].toLowerCase()) >= 0) {
@@ -91,6 +112,10 @@ class Reports extends React.Component {
       qs[COUNTRY] = `eq.${s[COUNTRY]}`
     }
 
+    if (s.hasOwnProperty('search')) {
+      qs.name = `fts.${s.search}`
+    }
+
     return '?' + stringify(qs)
   }
 
@@ -116,22 +141,32 @@ class Reports extends React.Component {
         <div className='section'>
           <div className='inner'>
             <AsyncStatus />
-            <h4>Filter reports {false && this.renderClearFilters()}</h4>
+            <h3 className='section__title'>Search and filter reports {false && this.renderClearFilters()}</h3>
+            <div className='tags'>
+              <EditableText
+                canEdit={true}
+                formID={'report-search'}
+                label={'Search for a report'}
+                placeholder='Type a search...'
+                onSubmit={this.submitSearch}
+                schemaPropertyName='value'
+              />
+            </div>
 
             <div className='tags'>
               <ReactSelect formID='filter-country'
-                label='Country'
+                label='Filter by country'
                 options={this.props.countries} />
             </div>
 
             <div className='tags tags__inline'>
               <ReactSelect formID='filter-report-type'
                 className='reactselect__cont--inline'
-                label='Report Type'
+                label='Filter by report type'
                 options={reportTypes} />
               <ReactSelect formID='filter-disaster-type'
                 className='reactselect__cont--inline'
-                label='Disaster Type'
+                label='Filter by disaster type'
                 options={disasterTypes} />
             </div>
 
@@ -167,7 +202,8 @@ const mapStateToProps = (state, props) => {
     countryField: state.forms['filter-country'],
     typeField: state.forms['filter-report-type'],
     disasterField: state.forms['filter-disaster-type'],
-    themeField: state.forms['filter-themes']
+    themeField: state.forms['filter-themes'],
+    searchField: state.forms['report-search']
   }
 }
 
