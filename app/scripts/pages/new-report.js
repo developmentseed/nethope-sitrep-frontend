@@ -160,6 +160,7 @@ class NewReport extends React.Component {
       <div className='modal__select modal__select--emergency'>
         <EmergencyList
           isSelect={true}
+          showCountry={true}
           onRowSelect={this.selectEmergency}
           data={emergencies.data} />
       </div>
