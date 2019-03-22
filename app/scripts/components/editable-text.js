@@ -45,7 +45,7 @@ class EditableText extends React.Component {
           type='text'
           id={this.props.formID}
           placeholder={placeholder}
-          value={this.props.value}
+          value={this.props.value || ''}
           onChange={this.update}
         />
         { !this.props.hideSubmit && (
