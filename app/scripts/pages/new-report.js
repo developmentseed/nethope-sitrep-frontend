@@ -2,12 +2,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Plain from 'slate-plain-serializer'
-import { get, set } from 'object-path'
+import { get } from 'object-path'
 
 import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
 import { createReport, postReport, forms, getEmergencies, getTags } from '../actions'
 import { disasterTypes, reportTypes } from '../utils/static-types'
+import { setReportRefs } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -77,7 +78,7 @@ class NewReport extends React.Component {
           const reports = reportField.split(', ')
             .map(reportID => this.props.reports.find(d => d.id === reportID))
             .map(report => ({ name: report.name, id: report.id, author: report.author }))
-          set(payload.content, 'metadata.report_refs', reports)
+          setReportRefs(payload, reports)
         }
 
         const tags = Array.isArray(themeField) && themeField.map(d => d.value)
