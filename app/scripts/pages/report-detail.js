@@ -6,10 +6,11 @@ import fileDownload from 'js-file-download'
 import slugify from 'slugify'
 import { get } from 'object-path'
 import { ago } from 'time-ago'
+import { stringify } from 'qs'
 
 import { nope, cap, reportTitle } from '../utils/format'
-import { getReport, getEmergency, deleteReport } from '../actions'
-import { getAuthorFromEmail } from '../utils/notebook'
+import { getReport, getEmergency, deleteReport, getReportsWithQs } from '../actions'
+import { getAuthorFromEmail, getReportRefs } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import Notebook from '../components/notebook'
@@ -17,6 +18,7 @@ import UpdateReport from '../components/update-report'
 import ForkReport from '../components/fork-report'
 import Versions from '../components/versions'
 import UploadReportSuccess from '../components/upload-report-success'
+import Report from '../components/report'
 
 class ReportDetail extends React.Component {
   constructor (props) {
@@ -53,6 +55,13 @@ class ReportDetail extends React.Component {
     if (this.props.report && this.props.report.emergency && !this.props.emergency) {
       this.props.getEmergency({ emergencyID: this.props.report.emergency })
     }
+    // Just loaded a report, check if we have all the referenced reports loaded.
+    if (this.props.report && !prevProps.report && this.props.refs.length !== this.props.referencedReports.length) {
+      const op = this.props.refs.length > 1 ? 'in' : 'eq'
+      this.props.getReportsWithQs({
+        qs: '?' + stringify({ id: `${op}.${this.props.refs.join(',')}` })
+      })
+    }
   }
 
   id (...args) {
@@ -81,6 +90,21 @@ class ReportDetail extends React.Component {
         ) }
       </React.Fragment>
     )
+  }
+
+  renderReportRefs () {
+    const { referencedReports } = this.props
+    if (!referencedReports.length) { return null }
+    return <div className='report__refs__cont'>
+      <h3>References</h3>
+      <ul className='report__refs'>
+        { referencedReports.map(report => (
+          <li key={report.id}>
+            <Report report={report} />
+          </li>
+        )) }
+      </ul>
+    </div>
   }
 
   renderReportOwner () {
@@ -143,6 +167,7 @@ class ReportDetail extends React.Component {
         {this.renderReportOwner()}
         {this.renderReportMeta()}
         <Versions docID={report['doc_id']} current={report.id} />
+        {this.renderReportRefs()}
         <Notebook data={report} />
       </React.Fragment>
     )
@@ -178,14 +203,18 @@ const mapStateToProps = (state, props) => {
   const author = get(report, 'author')
   const country = report && report.country && state.countries[report.country]
   const emergency = report && report.emergency && state.emergencyMap[report.emergency]
+  const refs = getReportRefs(report)
+  const referencedReports = refs.map(id => state.reports.find(d => d.id === id)).filter(Boolean)
   return {
     report,
     country,
     emergency,
+    refs,
+    referencedReports,
     isReportOwner: author && author === state.user.email
   }
 }
 
-const mapDispatch = { getReport, getEmergency, deleteReport }
+const mapDispatch = { getReport, getEmergency, deleteReport, getReportsWithQs }
 
 export default connect(mapStateToProps, mapDispatch)(ReportDetail)
