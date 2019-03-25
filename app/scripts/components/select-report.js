@@ -30,6 +30,18 @@ class SelectReport extends React.Component {
       e.preventDefault()
       this.props.update({ formID: this.props.formID, value: '' })
     }
+
+    this.onSubmit = () => {
+      this.props.onSubmit && this.props.onSubmit({ value: this.getCurrentValue() })
+    }
+
+    this.onModalClose = () => {
+      this.props.onModalClose && this.props.onModalClose({ value: this.getCurrentValue() })
+    }
+  }
+
+  getCurrentValue () {
+    return this.props.reportField ? this.props.reportField.split(', ') : []
   }
 
   componentDidMount () {
@@ -43,16 +55,19 @@ class SelectReport extends React.Component {
     if (!reports.length) return <AsyncStatus />
     const selectedReports = reportField ? reportField.split(', ') : []
     return (
-      <div className='modal__select modal__select--report'>
-        {reports.map(report => <Report
-          isSelect={true}
-          isSelected={selectedReports.indexOf(report.id) >= 0}
-          onSelect={this.selectReport}
-          key={report.id}
-          report={report}
-          hideImage={true}
-        />)}
-      </div>
+      <React.Fragment>
+        <div className='modal__select modal__select--report'>
+          {reports.map(report => <Report
+            isSelect={true}
+            isSelected={selectedReports.indexOf(report.id) >= 0}
+            onSelect={this.selectReport}
+            key={report.id}
+            report={report}
+            hideImage={true}
+          />)}
+        </div>
+        {this.props.showSubmit && <button className='modal__submit' onClick={this.onSubmit}>Submit</button>}
+      </React.Fragment>
     )
   }
 
@@ -67,6 +82,8 @@ class SelectReport extends React.Component {
       <Select formID={this.props.formID}
         label='Attached report(s)'
         placeholder='Select one or more reports to reference...'
+        initialValue={this.props.initialValue || ''}
+        onModalClose={this.onModalClose}
         prompt={this.renderPrompt()}>
         {this.renderReportSelect()}
       </Select>
@@ -75,7 +92,7 @@ class SelectReport extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  reports: state.reports,
+  reports: Array.isArray(props.without) ? state.reports.filter(d => props.without.indexOf(d.id) < 0) : state.reports,
   reportField: state.forms[props.formID]
 })
 
