@@ -102,6 +102,7 @@
   color: $darkgray;
   font-weight: bold;
   border-bottom: 1px solid $medgray;
+  margin-bottom: 1rem;
 }
 
 .report__ctrls {
@@ -172,11 +173,32 @@
 }
 
 .report__cont {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 2em;
-}
+  @extend .inner;
+  position: relative;
+  // Smaller max-size for referenced reports
+  .report__refs {
+    @include prose;
+  }
 
-.report__refs__cont {
-  @include prose;
+  @include large-up {
+    .section__report .report__section__title {
+      @include code;
+    }
+    .section__refs {
+      background: darken($lightgray, 2%);
+      border-radius: 4px;
+      left: 740px;
+      top: 0;
+      padding: 1em;
+      position: absolute;
+      width: 270px;
+      .report__section__title {
+        @include medium-heading;
+        border-bottom: none;
+      }
+    }
+    .reportcard {
+      margin: 0 0 1rem;
+    }
+  }
 }

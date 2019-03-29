@@ -77,7 +77,7 @@ class ReportDetail extends React.Component {
   renderUpdateReport () {
     const { report, isReportOwner } = this.props
     return (
-      <React.Fragment>
+      <div className='inner'>
         <div className='report__ctrls'>
           <Link className='report__ctrl report__ctrl--small' to={`/reports/${this.id()}`}>
             <span className='collecticons collecticons-arrow-return' />
@@ -90,7 +90,7 @@ class ReportDetail extends React.Component {
             <p className='status error'><span className='error__icon collecticons-circle-exclamation' /> Oops, you can only edit reports you own. Fork this report so you can edit it.</p>
           </div>
         ) }
-      </React.Fragment>
+      </div>
     )
   }
 
@@ -153,34 +153,36 @@ class ReportDetail extends React.Component {
     const { report, isReportOwner } = this.props
     return (
       <React.Fragment>
-        <div className='report__ctrls'>
-          <button className='report__ctrl report__ctrl__dl' onClick={this.download}>
-            <span className='collecticons collecticons-download' /> Download report
-          </button>
-          { isReportOwner ? (
-            <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
-              <span className='collecticons collecticons-wrench' />Update this report
-            </Link>
-          ) : <ForkReport current={report.id} /> }
-          { false && (
-            <button className='report__ctrl report__ctrl__del' onClick={this.delete}>
-              <span className='collecticons collecticons-trash-bin' />Delete this report
+        <div className='inner'>
+          <div className='report__ctrls'>
+            <button className='report__ctrl report__ctrl__dl' onClick={this.download}>
+              <span className='collecticons collecticons-download' /> Download report
             </button>
-          ) }
-        </div>
-        <section className='section'>
-          <h1 className='report__section__title'>Report details</h1>
-          {this.renderReportOwner()}
-          {this.renderReportMeta()}
-          <Versions docID={report['doc_id']} current={report.id} />
-        </section>
-        <section className='section'>
-          <h1 className='report__section__title'>Report body</h1>
-          <div className='report__cont'>
-            <Notebook data={report} />
-            {this.renderReportRefs()}
+            { isReportOwner ? (
+              <Link className='report__ctrl report__ctrl__up' to={`/reports/${this.id()}/update`}>
+                <span className='collecticons collecticons-wrench' />Update this report
+              </Link>
+            ) : <ForkReport current={report.id} /> }
+            { false && (
+              <button className='report__ctrl report__ctrl__del' onClick={this.delete}>
+                <span className='collecticons collecticons-trash-bin' />Delete this report
+              </button>
+            ) }
           </div>
-        </section>
+          <section className='section'>
+            <h1 className='report__section__title'>Report details</h1>
+            {this.renderReportOwner()}
+            {this.renderReportMeta()}
+            <Versions docID={report['doc_id']} current={report.id} />
+          </section>
+        </div>
+        <div className='report__cont'>
+          <section className='section section__report'>
+            <h1 className='report__section__title'>Report body</h1>
+            <Notebook data={report} />
+          </section>
+          {this.renderReportRefs()}
+        </div>
       </React.Fragment>
     )
   }
@@ -200,8 +202,8 @@ class ReportDetail extends React.Component {
           <div className='inner'>
             <AsyncStatus />
             <UploadReportSuccess />
-            { showUpdateUI ? this.renderUpdateReport() : this.renderReport() }
           </div>
+          { showUpdateUI ? this.renderUpdateReport() : this.renderReport() }
         </div>
       </div>
     )
