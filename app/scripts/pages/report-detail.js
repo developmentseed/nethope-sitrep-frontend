@@ -56,10 +56,12 @@ class ReportDetail extends React.Component {
       this.props.getEmergency({ emergencyID: this.props.report.emergency })
     }
     // Just loaded a report, check if we have all the referenced reports loaded.
-    if (this.props.report && !prevProps.report && this.props.refs.length !== this.props.referencedReports.length) {
+    if (this.props.report && !prevProps.report && this.props.refs.length > this.props.referencedReports.length) {
       const op = this.props.refs.length > 1 ? 'in' : 'eq'
+      // For multiple reports, wrap the request in "()" ie. id=in.(id1,id2).
+      const refs = op === 'in' ? `(${this.props.refs.join(',')})` : this.props.refs[0];
       this.props.getReportsWithQs({
-        qs: '?' + stringify({ id: `${op}.${this.props.refs.join(',')}` })
+        qs: '?' + stringify({ id: `${op}.${refs}` })
       })
     }
   }
@@ -95,23 +97,25 @@ class ReportDetail extends React.Component {
   renderReportRefs () {
     const { referencedReports } = this.props
     if (!referencedReports.length) { return null }
-    return <div className='report__refs__cont'>
-      <h3>References</h3>
-      <ul className='report__refs'>
-        { referencedReports.map(report => (
-          <li key={report.id}>
-            <Report report={report} />
-          </li>
-        )) }
-      </ul>
-    </div>
+    return <section className='section section__refs'>
+      <h1 className='report__section__title'>References</h1>
+      <div className='report__refs__cont'>
+        <ul className='report__refs'>
+          { referencedReports.map(report => (
+            <li key={report.id}>
+              <Report report={report} />
+            </li>
+          )) }
+        </ul>
+      </div>
+    </section>
   }
 
   renderReportOwner () {
     const { report, isReportOwner } = this.props
     const owner = isReportOwner ? 'You' : getAuthorFromEmail(report.author)
     return (
-      <div className='report__owner'>
+      <div className='report__info'>
         <p>{owner} created this report {ago(report['created_at'])}.</p>
       </div>
     )
@@ -164,11 +168,19 @@ class ReportDetail extends React.Component {
             </button>
           ) }
         </div>
-        {this.renderReportOwner()}
-        {this.renderReportMeta()}
-        <Versions docID={report['doc_id']} current={report.id} />
-        {this.renderReportRefs()}
-        <Notebook data={report} />
+        <section className='section'>
+          <h1 className='report__section__title'>Report details</h1>
+          {this.renderReportOwner()}
+          {this.renderReportMeta()}
+          <Versions docID={report['doc_id']} current={report.id} />
+        </section>
+        <section className='section'>
+          <h1 className='report__section__title'>Report body</h1>
+          <div className='report__cont'>
+            <Notebook data={report} />
+            {this.renderReportRefs()}
+          </div>
+        </section>
       </React.Fragment>
     )
   }
