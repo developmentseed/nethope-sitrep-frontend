@@ -97,6 +97,13 @@
 
 /* Individual (detail) report styles */
 
+.report__section__title {
+  @include large-heading;
+  color: $darkgray;
+  font-weight: bold;
+  border-bottom: 1px solid $medgray;
+}
+
 .report__ctrls {
   display: inline-block;
   margin: 1em 0;
@@ -153,13 +160,23 @@
   margin-top: 3em;
 }
 
-.report__owner,
+.report__info,
 .report__tags,
 .report__upload {
   margin-top: 1em;
 }
 
-.report__owner {
+.report__info {
   color: $darkgray;
   font-style: italic;
+}
+
+.report__cont {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 2em;
+}
+
+.report__refs__cont {
+  @include prose;
 }
