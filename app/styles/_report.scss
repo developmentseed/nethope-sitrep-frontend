@@ -97,6 +97,14 @@
 
 /* Individual (detail) report styles */
 
+.report__section__title {
+  @include large-heading;
+  color: $darkgray;
+  font-weight: bold;
+  border-bottom: 1px solid $medgray;
+  margin-bottom: 1rem;
+}
+
 .report__ctrls {
   display: inline-block;
   margin: 1em 0;
@@ -153,13 +161,44 @@
   margin-top: 3em;
 }
 
-.report__owner,
+.report__info,
 .report__tags,
 .report__upload {
   margin-top: 1em;
 }
 
-.report__owner {
+.report__info {
   color: $darkgray;
   font-style: italic;
+}
+
+.report__cont {
+  @extend .inner;
+  position: relative;
+  // Smaller max-size for referenced reports
+  .report__refs {
+    @include prose;
+  }
+
+  @include large-up {
+    .section__report .report__section__title {
+      @include code;
+    }
+    .section__refs {
+      background: darken($lightgray, 2%);
+      border-radius: 4px;
+      left: 740px;
+      top: 0;
+      padding: 1em;
+      position: absolute;
+      width: 270px;
+      .report__section__title {
+        @include medium-heading;
+        border-bottom: none;
+      }
+    }
+    .reportcard {
+      margin: 0 0 1rem;
+    }
+  }
 }

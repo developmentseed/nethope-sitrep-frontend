@@ -1,10 +1,9 @@
 .notebook {
-  margin: 2em 0 4em;
+  @include code;
 }
 
 
 .nb-notebook {
-  @include code;
   font-family: $code-font-family;
   font-size: $code-font-size;
   color: #000000;
@@ -27,6 +26,9 @@
   @include medium-heading;
   margin-top: 1.4em;
   margin-bottom: 1em;
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .nb-markdown-cell {

@@ -3,12 +3,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Plain from 'slate-plain-serializer'
 import { get } from 'object-path'
-import _without from 'lodash.without'
 
 import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
-import { createReport, postReport, forms, getEmergencies, getTags, getReportsWithQs } from '../actions'
+import { createReport, postReport, forms, getEmergencies, getTags } from '../actions'
 import { disasterTypes, reportTypes } from '../utils/static-types'
+import { setReportRefs } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -16,8 +16,8 @@ import EditableText from '../components/editable-text'
 import UploadReportSuccess from '../components/upload-report-success'
 import ReactSelect from '../components/react-select'
 import Select from '../components/select'
+import SelectReport from '../components/select-report'
 import EmergencyList from '../components/emergency-list'
-import Report from '../components/report'
 
 const nameFieldID = 'new-report-name'
 const reportFieldID = 'new-report-attached-reports'
@@ -78,8 +78,7 @@ class NewReport extends React.Component {
           const reports = reportField.split(', ')
             .map(reportID => this.props.reports.find(d => d.id === reportID))
             .map(report => ({ name: report.name, id: report.id, author: report.author }))
-          payload.content.metadata = payload.content.metadata || {}
-          payload.content.metadata['report_refs'] = reports
+          setReportRefs(payload, reports)
         }
 
         const tags = Array.isArray(themeField) && themeField.map(d => d.value)
@@ -101,29 +100,12 @@ class NewReport extends React.Component {
         if (country) this.props.update({ formID: countryFieldID, value: country })
       }
     }
-
-    this.selectReport = (e) => {
-      e.preventDefault()
-      const value = e.currentTarget.getAttribute('data-value')
-      const current = this.props.reportField
-      let next = current ? current.split(',') : []
-      if (current.indexOf(value) >= 0) {
-        next = _without(current, value)
-      } else {
-        next.push(value)
-      }
-      this.props.update({ formID: reportFieldID, value: next.join(', ') })
-    }
   }
 
   componentDidMount () {
     // We need to query emergencies here to support metadata selection
     if (!this.props.emergencies) {
       this.props.getEmergencies({ qs: this.props.qs })
-    }
-
-    if (!this.props.reports.length) {
-      this.props.getReportsWithQs({ qs: '' })
     }
 
     if (!this.props.themes) {
@@ -135,24 +117,6 @@ class NewReport extends React.Component {
     this.props.clear()
   }
 
-  renderReportSelect () {
-    const { reports, reportField } = this.props
-    if (!reports.length) return <AsyncStatus />
-    const selectedReports = reportField ? reportField.split(', ') : []
-    return (
-      <div className='modal__select modal__select--report'>
-        {reports.map(report => <Report
-          isSelect={true}
-          isSelected={selectedReports.indexOf(report.id) >= 0}
-          onSelect={this.selectReport}
-          key={report.id}
-          report={report}
-          hideImage={true}
-        />)}
-      </div>
-    )
-  }
-
   renderEmergencyTable () {
     const { emergencies } = this.props
     if (!emergencies || !emergencies.data.length) return <AsyncStatus />
@@ -160,6 +124,7 @@ class NewReport extends React.Component {
       <div className='modal__select modal__select--emergency'>
         <EmergencyList
           isSelect={true}
+          showCountry={true}
           onRowSelect={this.selectEmergency}
           data={emergencies.data} />
       </div>
@@ -198,13 +163,7 @@ class NewReport extends React.Component {
               value={this.props.editorValue}/>
 
             <div className='tags'>
-              <Select formID={reportFieldID}
-                label='Attached report(s)'
-                placeholder='Select one or more reports to reference...'
-                prompt='Choose a report'>
-                {this.renderReportSelect()}
-              </Select>
-
+              <SelectReport formID={reportFieldID} />
               <Select formID={emergencyFieldID}
                 label='Emergency'
                 placeholder='Select an emergency...'
@@ -274,7 +233,6 @@ const mapDispatch = {
   postReport,
   getEmergencies,
   getTags,
-  getReportsWithQs,
   update: forms.update
 }
 export default connect(mapStateToProps, mapDispatch)(NewReport)

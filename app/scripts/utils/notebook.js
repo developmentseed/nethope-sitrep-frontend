@@ -1,5 +1,6 @@
 'use strict'
-import { get } from 'object-path'
+import { get, set } from 'object-path'
+import assert from 'assert'
 
 const imgMimes = [ 'image/jpeg', 'image/png' ]
 const imgTypes = [ 'jpeg', 'png' ]
@@ -52,4 +53,15 @@ export function getReportLeadImage (report) {
 export function getAuthorFromEmail (email) {
   let split = email.split('@')
   return split[0] || 'Author'
+}
+
+export function setReportRefs (report, refs) {
+  assert(Array.isArray(refs), true)
+  set(report, 'content.metadata.report_refs', refs)
+  return { ...report }
+}
+
+export function getReportRefs (report, asString) {
+  const refs = get(report, 'content.metadata.report_refs', [])
+  return asString ? refs.join(', ') : refs
 }

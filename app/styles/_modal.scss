@@ -56,3 +56,17 @@
 .modal__ctrl--confirm {
   @include button-confirm;
 }
+
+.modal__clear {
+  @include small-text;
+  .collecticons {
+    font-size: 0.8em;
+    margin-right: 0.1em;
+  }
+}
+
+.modal__submit {
+  @include button;
+  @include button-confirm;
+  padding: 0.5em 2em;
+}
