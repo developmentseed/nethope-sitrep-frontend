@@ -56,8 +56,13 @@ class Versions extends React.Component {
     )
   }
 
+  renderNoVersions () {
+    return <p className='report__info'>This is the first version of this report.</p>
+  }
+
   render () {
     const { older, newer } = this.props
+    if (!older.length && !newer.length) return this.renderNoVersions()
     return (
       <div className='report__versions'>
         { older.length > 0 && <p className='versions__count'>{older.length} older version(s) available. <a href='#' onClick={this.toggleOld}>{this.state.older ? 'Hide' : 'Show'}</a></p> }

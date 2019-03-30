@@ -16,7 +16,11 @@ class Select extends React.Component {
     }
 
     this.toggle = () => {
-      this.setState({ showSelect: !this.state.showSelect })
+      const next = { showSelect: !this.state.showSelect }
+      this.setState(next)
+      if (this.props.onModalClose && !next.showSelect) {
+        this.props.onModalClose()
+      }
     }
   }
 

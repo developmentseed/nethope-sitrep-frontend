@@ -8,6 +8,7 @@ import { getSimpleNotebookPayload } from '../utils/async'
 import { recentQs } from '../utils/timespans'
 import { createReport, postReport, forms, getEmergencies, getTags } from '../actions'
 import { disasterTypes, reportTypes } from '../utils/static-types'
+import { setReportRefs } from '../utils/notebook'
 
 import AsyncStatus from '../components/async-status'
 import MarkdownReportEditor from '../components/markdown-report-editor'
@@ -15,9 +16,11 @@ import EditableText from '../components/editable-text'
 import UploadReportSuccess from '../components/upload-report-success'
 import ReactSelect from '../components/react-select'
 import Select from '../components/select'
+import SelectReport from '../components/select-report'
 import EmergencyList from '../components/emergency-list'
 
 const nameFieldID = 'new-report-name'
+const reportFieldID = 'new-report-attached-reports'
 const emergencyFieldID = 'new-report-emergency'
 const countryFieldID = 'new-report-country'
 const typeFieldID = 'new-report-type'
@@ -49,6 +52,7 @@ class NewReport extends React.Component {
         name,
         editorValue,
         emergencyField,
+        reportField,
         countryField,
         typeField,
         themeField,
@@ -69,6 +73,13 @@ class NewReport extends React.Component {
         payload.emergency = get(this.getEmergency(emergencyField), 'id')
         payload['report_type'] = typeField.value
         payload['disaster_type'] = disasterField.value
+
+        if (reportField) {
+          const reports = reportField.split(', ')
+            .map(reportID => this.props.reports.find(d => d.id === reportID))
+            .map(report => ({ name: report.name, id: report.id, author: report.author }))
+          setReportRefs(payload, reports)
+        }
 
         const tags = Array.isArray(themeField) && themeField.map(d => d.value)
         this.props.postReport({ payload, tags })
@@ -113,6 +124,7 @@ class NewReport extends React.Component {
       <div className='modal__select modal__select--emergency'>
         <EmergencyList
           isSelect={true}
+          showCountry={true}
           onRowSelect={this.selectEmergency}
           data={emergencies.data} />
       </div>
@@ -151,6 +163,7 @@ class NewReport extends React.Component {
               value={this.props.editorValue}/>
 
             <div className='tags'>
+              <SelectReport formID={reportFieldID} />
               <Select formID={emergencyFieldID}
                 label='Emergency'
                 placeholder='Select an emergency...'
@@ -200,12 +213,14 @@ const mapStateToProps = (state) => ({
     .map(d => ({ label: d.name, value: d.id })),
 
   emergencies: state.emergencies[recentQs],
+  reports: state.reports,
   qs: recentQs,
   themes: state.tags.themes,
 
   // form values
   editorValue: state.newReport.value,
   name: state.forms[nameFieldID],
+  reportField: state.forms[reportFieldID],
   emergencyField: state.forms[emergencyFieldID],
   countryField: state.forms[countryFieldID],
   typeField: state.forms[typeFieldID],

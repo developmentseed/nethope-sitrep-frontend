@@ -5,9 +5,11 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import { readReport, postReport, patchReport, clearUploadState } from '../actions'
+import { setReportRefs, getReportRefs } from '../utils/notebook'
 
-import Notebook from '../components/notebook'
-import EditableText from '../components/editable-text'
+import Notebook from './notebook'
+import EditableText from './editable-text'
+import SelectReport from './select-report'
 
 const errors = {
   json: 'JSON parse error',
@@ -20,6 +22,11 @@ class UpdateReport extends React.Component {
 
     this.updateReportMetadata = (payload) => {
       this.props.patchReport({ id: this.props.report.id, payload })
+    }
+
+    this.updateReportRefs = ({ value }) => {
+      setReportRefs(this.props.report, value)
+      this.props.patchReport({ id: this.props.report.id, payload: { content: this.props.report.content } })
     }
 
     this.onFileInputChange = (e) => {
@@ -88,6 +95,13 @@ class UpdateReport extends React.Component {
             placeholder='Enter a report name'
             onSubmit={this.updateReportMetadata}
             schemaPropertyName='name'
+          />
+          <SelectReport
+            formID={`${report.id}-reports`}
+            initialValue={getReportRefs(report, true)}
+            showSubmit={true}
+            onModalClose={this.updateReportRefs}
+            without={[report.id]}
           />
         </div>
         <div className='report__next'>
